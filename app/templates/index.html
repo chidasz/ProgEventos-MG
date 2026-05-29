@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ProgEventos</title>
+
+<link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<style>
+
+body{
+    background-color:#121212;
+    color:white;
+    margin:0;
+    padding:0;
+}
+
+/* MENU LATERAL */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background-color:#1b1b1b;
+    padding-top:20px;
+    box-shadow:2px 0 10px rgba(0,0,0,0.5);
+}
+
+.sidebar h3{
+    text-align:center;
+    color:#28a745;
+    margin-bottom:30px;
+}
+
+.sidebar a{
+    display:block;
+    color:white;
+    padding:15px 25px;
+    text-decoration:none;
+    transition:0.3s;
+}
+
+.sidebar a:hover{
+    background-color:#28a745;
+    color:white;
+}
+
+/* CONTEÚDO */
+
+.content{
+    margin-left:270px;
+    padding:40px;
+}
+
+.jumbotron{
+    background-color:#1f1f1f;
+    color:white;
+    border:1px solid #333;
+}
+
+.card{
+    background-color:#1f1f1f;
+    color:white;
+    border:1px solid #333;
+}
+
+.btn-custom{
+    background-color:#28a745;
+    color:white;
+}
+
+.btn-custom:hover{
+    background-color:#218838;
+    color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h3>ProgEventos</h3>
+
+    <a href="/"> Início</a>
+
+    <a href="/pessoas/"> Pessoas</a>
+
+    <a href="/competicoes/">Competições</a>
+
+    <a href="/universidades/">Universidades</a>
+
+    <a href="/resultados/">Resultados</a>
+
+    <a href="/calendarios/">Calendário</a>
+
+    <a href="/notificacoes/">Notificações</a>
+
+    <a href="/admin/">Administração</a>
+
+</div>
+
+<div class="content">
+
+    <div class="jumbotron text-center">
+
+        <h1 class="display-4">
+            Seja Bem-vindo!
+        </h1>
+
+        <p class="lead">
+            Plataforma de Maratonas e Olimpíadas de Programação
+            de Minas Gerais.
+        </p>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                         Competições
+                    </h5>
+
+                    <p>
+                        Consulte eventos e olimpíadas cadastradas.
+                    </p>
+
+                    <a href="/competicoes/"
+                    class="btn btn-custom">
+                        Acessar
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                         Calendário
+                    </h5>
+
+                    <p>
+                        Veja datas e horários dos eventos.
+                    </p>
+
+                    <a href="/calendarios/"
+                    class="btn btn-custom">
+                        Acessar
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                         Resultados
+                    </h5>
+
+                    <p>
+                        Consulte pontuações e classificações.
+                    </p>
+
+                    <a href="/resultados/"
+                    class="btn btn-custom">
+                        Acessar
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
