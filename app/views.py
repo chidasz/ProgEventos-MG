@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-
+from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login
 from .models import *
 from .forms import CompeticaoForm
 
@@ -32,17 +33,21 @@ class IndexView(View):
 class LoginView(View):
 
     def get(self, request):
-        return render(request, 'login.html')
+        return render(request, "login.html")
 
     def post(self, request):
 
-        request.session['nome_usuario'] = request.POST.get('nome')
-        request.session['email_usuario'] = request.POST.get('email')
+        administrador = request.POST.get("admin")
 
-        avatar = request.POST.get('avatar')
-        request.session['avatar_usuario'] = avatar
+        if administrador:
 
-        return redirect('index')
+            return redirect("/admin/login/")
+
+        nome = request.POST.get("nome")
+
+        request.session["nome_usuario"] = nome
+
+        return redirect("/")
 
 
 # =========================

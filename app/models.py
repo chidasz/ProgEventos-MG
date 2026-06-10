@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # =========================
@@ -45,7 +46,7 @@ class Universidade(models.Model):
 
 class Competicao(models.Model):
     nome = models.CharField(max_length=100)
-    descricao = models.CharField(max_length=200)
+    descricao = models.CharField(max_length=1000)
     data = models.DateField()
     local = models.CharField(max_length=100)
     organizador = models.CharField(max_length=100)
