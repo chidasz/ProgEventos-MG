@@ -8,7 +8,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Página Inicial
-    path('', IndexView.as_view(), name='index'),
+    path('', LoginView.as_view(), name='login'),
+    path('inicio/', IndexView.as_view(), name='index'),
 
     # Usuário
     path('login/', LoginView.as_view(), name='login'),
@@ -76,17 +77,16 @@ urlpatterns = [
         name='pesquisa'
     ),
 
-    # Administração
+
     path(
-        'administracoes/',
-        AdministracoesView.as_view(),
-        name='administracoes'
+        "editar-perfil/",
+        EditarPerfilView.as_view(),
+        name="editar_perfil"
     ),
 
-    #logout 
     path(
-        'logout/',
-        LogoutView.as_view(),
-        name='logout'
-),
+        "cadastro/",
+        CadastroView.as_view(),
+        name="cadastro"
+    ),
 ]
