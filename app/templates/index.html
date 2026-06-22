@@ -1,316 +1,525 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-<link rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProgEventos-MG</title>
 
-<title>ProgEventos</title>
+<!-- Bootstrap 5.3.8 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous">
 
+<!-- Bootstrap Icons -->
 <link rel="stylesheet"
-href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
+body {
+    background: #121212;
+    color: white;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    width: 250px;
+    height: 100vh;
+    background: #181818;
+    padding: 25px 15px;
+    box-shadow: 3px 0px 15px rgba(0,0,0,.4);
+    overflow-y: auto;
+}
+.sidebar h3 {
+    color: #28a745;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 18px;
+}
+.sidebar a {
+    display: block;
+    padding: 11px 14px;
+    margin-bottom: 4px;
+    color: #ccc;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: .2s;
+    font-size: 14px;
+}
+.sidebar a:hover { background: #28a745; color: white; }
+.sidebar i { margin-right: 8px; }
+.sidebar .divider {
+    border-top: 1px solid #2e2e2e;
+    margin: 12px 0;
+}
+.sidebar .btn-sair { color: #dc3545 !important; }
+.sidebar .btn-sair:hover { background: #dc3545 !important; color: white !important; }
+.content {
+    margin-left: 265px;
+    padding: 30px;
+}
+.topbar {
+    background: #1f1f1f;
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 15px;
+}
+.search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: #2b2b2b;
+    border-radius: 30px;
+    padding: 10px 18px;
+}
+.search-box i {
+    color: #28a745;
+    font-size: 20px;
+    margin-right: 12px;
+}
+.search-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: none;
+    color: white;
+    font-size: 14px;
+}
+.search-box input::placeholder { color: #666; }
 
-body{
-    background-color:#121212;
-    color:white;
-    margin:0;
-    padding:0;
+/* CORRIGIDO: botão de perfil funcional */
+.user-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #28a745;
+    transition: .2s;
+    min-width: 60px;
+}
+.user-btn:hover { color: #34ce57; }
+.user-btn i { font-size: 34px; }
+.user-btn .user-name {
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 2px;
+    text-align: center;
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-/* MENU LATERAL */
-
-.sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    width:250px;
-    height:100vh;
-    background-color:#1b1b1b;
-    padding-top:20px;
-    box-shadow:2px 0 10px rgba(0,0,0,0.5);
+.carousel {
+    background: #1f1f1f;
+    border-radius: 15px;
+    height: 420px;
+    display: flex;
+    align-items: center;
 }
+.carousel-item { padding-top: 40px; }
+.carousel-item h2 { font-size: 38px; margin-top: 20px; }
+.carousel-item p { width: 65%; margin: auto; font-size: 18px; color: #bbb; }
+.carousel-control-prev,
+.carousel-control-next { opacity: 1; }
+.cards { margin-top: 45px; }
+.info-card{
+    background: linear-gradient(
+        145deg,
+        #1f1f1f
+    );
 
-.sidebar h3{
+        
+    border-radius:18px;
+    padding:28px;
     text-align:center;
-    color:#28a745;
-    margin-bottom:30px;
+
+    transition:.3s;
 }
 
-.sidebar a{
-    display:block;
-    color:white;
-    padding:15px 25px;
-    text-decoration:none;
-    transition:0.3s;
+.info-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 10px 25px rgba(34,197,94,.25);
+    border-color:#22c55e;
+}
+.info-card i { font-size: 50px; color: #28a745; }
+.info-card h2 { margin-top: 16px; font-size: 18px; }
+.info-card h3 { color: #28a745; font-size: 28px; font-weight: bold; }
+.sobre {
+    margin-top: 45px;
+    background: #1f1f1f;
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #2e2e2e;
+}
+footer {
+    text-align: center;
+    color: #555;
+    margin-top: 50px;
+    margin-bottom: 25px;
+    font-size: 13px;
 }
 
-.sidebar a:hover{
-    background-color:#28a745;
-    color:white;
+.hero-integrada{
+    background: linear-gradient(
+        135deg,
+        #1f1f1f
+        
+    );
+
+    border:1px solid rgba(34,197,94,.25);
+
+    border-radius:24px;
+
+    padding:50px;
+
+    margin-bottom:40px;
+
+    position:relative;
+
+    overflow:hidden;
 }
 
-/* CONTEÚDO */
+.hero-integrada::before{
+    content:'';
 
-.content{
-    margin-left:270px;
+    position:absolute;
+
+    width:400px;
+    height:400px;
+
+    background:#1f1f1f;
+
+    border-radius:50%;
+
+    top:-150px;
+    right:-150px;
+
+    filter:blur(80px);
+}
+
+.hero-integrada h1{
+    font-size:3.5rem;
+    font-weight:800;
+    letter-spacing:-2px;
+}
+
+.hero-text{
+    color:#d1d5db;
+    font-size:1.15rem;
+    line-height:1.8;
+}
+
+.competicao-slide{
+
+    background:linear-gradient(
+    145deg,
+    #1f1f1f
+);
+
+    border:1px solid rgba(34,197,94,.25);
+
+    border-radius:20px;
+
     padding:40px;
-}
 
-.jumbotron{
-    background-color:#1f1f1f;
-    color:white;
-    border:1px solid #333;
-}
+    min-height:350px;
 
-.card{
-    background-color:#1f1f1f;
-    color:white;
-    border:1px solid #333;
-}
-
-.btn-custom{
-    background-color:#28a745;
-    color:white;
-}
-
-.btn-custom:hover{
-    background-color:#218838;
-    color:white;
-}
-
-/* BARRA SUPERIOR */
-
-.top-bar{
     display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
-}
 
-/* PESQUISA */
+    flex-direction:column;
 
-.search-container{
-    flex:1;
-    display:flex;
     justify-content:center;
+
+    text-align:center;
+
+    transition:.3s,
+
 }
 
-.search-container form{
-    display:flex;
-    width:500px;
+.competicao-slide h3{
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
 }
 
-.search-input{
-    width:100%;
-    padding:12px 20px;
-    border:none;
-    outline:none;
-    border-radius:50px;
-    background:#2b2b2b;
-    color:white;
-    font-size:16px;
+.competicao-slide p{
+
+    color:#d1d5db;
+
+    margin-bottom:10px;
+
 }
 
-.search-btn{
-    margin-left:10px;
-    border:none;
-    border-radius:50px;
-    padding:12px 20px;
-    background:#28a745;
-    color:white;
-    cursor:pointer;
+.carousel-control-prev,
+.carousel-control-next{
+
+    width:8%;
+
 }
 
-.search-btn:hover{
-    background:#218838;
-}
-
-/* LOGIN */
-
-.login-container{
-    margin-left:20px;
-}
-
-.login-btn{
-    text-decoration:none;
-    background:#28a745;
-    color:white;
-    padding:12px 25px;
-    border-radius:50px;
-    font-weight:bold;
-}
-
-.login-btn:hover{
-    color:white;
-    text-decoration:none;
-    background:#218838;
-}
 
 </style>
-
 </head>
 
 <body>
 
 <div class="sidebar">
+    <h3><i class="bi bi-code-slash"></i>ProgEventos-MG</h3>
 
-    <h3>ProgEventos</h3>
+    <a href="{% url 'index' %}"><i class="bi bi-house-fill"></i>Início</a>
+    <a href="{% url 'competicoes' %}"><i class="bi bi-trophy-fill"></i>Competições</a>
+    <a href="{% url 'universidades' %}"><i class="bi bi-building"></i>Universidades</a>
+    <a href="{% url 'calendarios' %}"><i class="bi bi-calendar-event-fill"></i>Calendário</a>
+    <a href="{% url 'resultados' %}"><i class="bi bi-award-fill"></i>Resultados</a>
+    <a href="{% url 'favoritos' %}"><i class="bi bi-heart-fill"></i>Favoritos</a>
+    <a href="{% url 'historicos' %}"><i class="bi bi-clock-history"></i>Histórico</a>
+    <a href="{% url 'notificacoes' %}"><i class="bi bi-bell-fill"></i>Notificações</a>
+    <a href="{% url 'pesquisa' %}"><i class="bi bi-search"></i>Pesquisa</a>
+    <a href="{% url 'perfil' %}"><i class="bi bi-person-circle"></i>Perfil</a>
 
-    <a href="/"> Início</a>
+    <div class="divider"></div>
 
-    <a href="/perfil/"> Meu Perfil</a>
-
-    <a href="/competicoes/">Competições</a>
-
-    <a href="/universidades/">Universidades</a>
-
-    <a href="/resultados/">Resultados</a>
-
-    <a href="/calendarios/">Calendário</a>
-
-    <a href="/notificacoes/">Notificações</a>
-
-    <a href="/favoritos/">Favoritos</a>
-
-    <a href="/historicos/">Histórico</a>
-
-
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'logout' %}" class="btn-sair">
+            <i class="bi bi-box-arrow-right"></i>Sair ({{ request.user.username }})
+        </a>
+    {% else %}
+        <a href="{% url 'login' %}">
+            <i class="bi bi-box-arrow-in-right"></i>Login
+        </a>
+    {% endif %}
 </div>
 
 <div class="content">
 
-    <div class="top-bar">
+    <div class="topbar">
 
-    <div class="search-container">
-
-        <form action="/pesquisa/" method="GET">
-
-            <input
-                type="text"
-                name="pesquisa"
-                placeholder="Pesquisar competições..."
-                class="search-input"
-            >
-
-            <button type="submit" class="search-btn">
-            <i class="bi bi-search"></i>
-            </button>
-
+        <form action="{% url 'pesquisa' %}" method="GET" style="flex:1;">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" name="pesquisa"
+                       placeholder="Pesquisar competições, universidades ou organizadores...">
+            </div>
         </form>
 
-    </div>
-
-    <div class="login-container">
-
-        <a href="/login/" class="login-btn">
-            Login
+        <!-- CORRIGIDO: botão do perfil agora é funcional -->
+        <a href="{% url 'perfil' %}" class="user-btn" title="Meu Perfil">
+            <i class="bi bi-person-circle"></i>
+            {% if request.user.is_authenticated %}
+                <span class="user-name">{{ request.user.username }}</span>
+            {% else %}
+                <span class="user-name">Perfil</span>
+            {% endif %}
         </a>
 
     </div>
 
-</div>
+    <!-- Carousel - Bootstrap 5: data-bs-* -->
+    <section class="hero-integrada">
 
-    <div class="jumbotron text-center">
+    <div class="row align-items-center">
 
-        <h1 class="display-4">
-            Seja Bem-vindo!
-        </h1>
+        <!-- TEXTO -->
+        <div class="col-lg-6">
 
-        <p class="lead">
-            Plataforma de Maratonas e Olimpíadas de Programação
-            de Minas Gerais.
-        </p>
+            <span class="badge bg-success mb-3">
+                Plataforma Oficial
+            </span>
+
+            <h1>
+                ProgEventos-MG
+            </h1>
+
+            <p class="hero-text">
+
+                Centralizando maratonas e olimpíadas
+                de programação realizadas em <strong>Minas Gerais</strong>
+                em um único ambiente.
+
+            </p>
+
+            <div class="mt-4">
+
+                <a href="{% url 'competicoes' %}"
+                   class="btn btn-success btn-lg">
+
+                    <i class="bi bi-trophy-fill"></i>
+                    Competições
+
+                </a>
+
+                <a href="{% url 'calendarios' %}"
+                   class="btn btn-outline-light btn-lg">
+
+                    <i class="bi bi-calendar-event-fill"></i>
+                    Calendário
+
+                </a>
+
+            </div>
+
+        </div>
+        <div class="col-lg-6">
+
+    <!-- TÍTULO FIXO -->
+    <div class="text-center mb-3">
+
+        <h3     class="text-success fw-bold">
+            
+            Próximas Competições
+        </h3>
 
     </div>
 
-    <div class="row">
+        <!-- CARROSSEL -->
+        <div id="heroCarousel"
+     class="carousel slide"
+     data-bs-ride="carousel"
+     data-bs-interval="5000">
+                    
+                <div class="carousel-inner">
 
-        <div class="col-md-4 mb-4">
+                                {% for competicao in proximas_competicoes %}
 
-            <div class="card">
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
 
-                <div class="card-body">
+                    <div class="competicao-slide">
 
-                    <h5 class="card-title">
-                         Competições
-                    </h5>
+                        <div class="mb-3">
+                            <i class="bi bi-trophy-fill display-4 text-success"></i>
+                        </div>
 
-                    <p>
-                        Consulte eventos e olimpíadas cadastradas.
-                    </p>
+                        <h3>
+                            {{ competicao.nome }}
+                        </h3>
 
-                    <a href="/competicoes/"
-                    class="btn btn-custom">
-                        Acessar
-                    </a>
+                        <hr>
 
-                </div>
+                        <p>
+                            <i class="bi bi-calendar-event"></i>
+                            {{ competicao.data }}
+                        </p>
 
-            </div>
+                        <p>
+                            <i class="bi bi-geo-alt-fill"></i>
+                            {{ competicao.local }}
+                        </p>
 
-        </div>
+                        <p>
+                            <i class="bi bi-person-fill"></i>
+                            {{ competicao.organizador }}
+                        </p>
 
-        <div class="col-md-4 mb-4">
+                        <a href="{% url 'competicoes' %}"
+                           class="btn btn-success">
 
-            <div class="card">
+                            Ver Competição
 
-                <div class="card-body">
+                        </a>
 
-                    <h5 class="card-title">
-                         Calendário
-                    </h5>
-
-                    <p>
-                        Veja datas e horários dos eventos.
-                    </p>
-
-                    <a href="/calendarios/"
-                    class="btn btn-custom">
-                        Acessar
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-4 mb-4">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <h5 class="card-title">
-                         Resultados
-                    </h5>
-
-                    <p>
-                        Consulte pontuações e classificações.
-                    </p>
-
-                    <a href="/resultados/"
-                    class="btn btn-custom">
-                        Acessar
-                    </a>
+                    </div>
 
                 </div>
 
-            </div>
+            {% empty %}
+
+                <div class="carousel-item active">
+
+                    <div class="competicao-slide">
+
+                        <i class="bi bi-calendar-x display-4"></i>
+
+                        <h3 class="mt-3">
+                            Nenhuma competição cadastrada
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
 
         </div>
-
+        
     </div>
 
 </div>
+</div>
+</section>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <div class="cards">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="info-card">
+                    <i class="bi bi-trophy-fill"></i>
+                    <h2>Competições</h2>
+                    <h3>{{ total_competicoes }}</h3>
+                    <p>Eventos cadastrados</p>
+                </div>
+            </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+            <div class="col-md-3">
+                <div class="info-card">
+                    <i class="bi bi-building"></i>
+                    <h2>Universidades</h2>
+                    <h3>{{ total_universidades }}</h3>
+                    <p>Instituições participantes</p>
+                </div>
+            </div>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <div class="col-md-3">
+                <div class="info-card">
+                    <i class="bi bi-calendar-event-fill"></i>
+                    <h2>Calendário</h2>
+                    <h3>{{ total_resultados }}</h3>
+                    <p>Resultados registrados</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="info-card">
+                    <i class="bi bi-people-fill"></i>
+                    <h2>Comunidade</h2>
+                    <h3>+500</h3>
+                    <p>Participantes cadastrados</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="sobre">
+        <h2><i class="bi bi-info-circle-fill" style="color:#28a745;"></i> Sobre o ProgEventos-MG</h2>
+        <hr style="border-color:#28a745;">
+        <p>O ProgEventos-MG é uma plataforma criada para centralizar informações sobre maratonas
+           e olimpíadas de programação realizadas no estado de Minas Gerais.</p>
+        <p>O sistema reúne competições, universidades, calendários, resultados, favoritos, notificações,
+           históricos de participação e ferramentas de pesquisa em um único ambiente.</p>
+        <p>O objetivo é facilitar o acesso às informações, aumentar a divulgação dos eventos e
+           incentivar a participação da comunidade acadêmica e tecnológica nas competições de programação.</p>
+    </div>
+
+    <footer>
+        <hr style="border-color:#2e2e2e;">
+        <p><i class="bi bi-code-slash"></i> ProgEventos-MG © 2026 &nbsp;·&nbsp; Python · Django · Bootstrap 5</p>
+    </footer>
+
+</div>
+
+<!-- Bootstrap 5.3.8 Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 
 </body>
 </html>

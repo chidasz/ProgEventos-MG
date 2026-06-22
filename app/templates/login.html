@@ -125,24 +125,6 @@
     border:3px solid #28a745;
     transform:scale(1.1);
 }
-
-.admin-text{
-    font-size:14px;
-    color:#888;
-    margin-top:18px;
-}
-
-.admin-link{
-    color:#28a745;
-    text-decoration:none;
-    font-weight:bold;
-    transition:0.3s;
-}
-
-.admin-link:hover{
-    color:#34ce57;
-    text-decoration:none;
-}
     </style>
 
 </head>
@@ -189,6 +171,23 @@
                                class="form-control"
                                name="senha"
                                required>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="admin"
+                            name="admin">
+                    
+                        <label class="form-check-label"
+                               for="admin">
+                    
+                            Sou administrador
+                    
+                        </label>
+                    
                     </div>
                 
                     <div class="form-group">
@@ -271,28 +270,20 @@ Entrar
 
 </button>
 
-<p class="text-center mt-3">
+<hr>
 
-Ainda não possui conta?
+<a href="/admin/login/"
+class="btn btn-danger btn-block">
 
-<a href="{% url 'cadastro' %}">
-
-Criar conta
+Login Administrativo
 
 </a>
 
-</p>
+                <div class="voltar">
+                    <a href="/">← Voltar para página inicial</a>
+                </div>
 
-<p class="text-center mt-3 admin-text">
-    <small>
-        É administrador?    
-        <a href="/admin/login/" class="admin-link">
-            Acesse o painel administrativo
-        </a>
-    </small>
-</p>
-
-         
+            </div>
 
         </div>
 

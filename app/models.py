@@ -3,40 +3,30 @@ from django.contrib.auth.models import User
 
 
 # =========================
-# PERFIL
+# PESSOA
 # =========================
 
-class Perfil(models.Model):
+class Pessoa(models.Model):
 
-    usuario = models.OneToOneField(
+    user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name="perfil"
-    )
-
-    foto = models.ImageField(
-        upload_to="perfil/",
-        blank=True,
-        null=True
-    )
-
-    avatar = models.CharField(
-        max_length=20,
-        choices=[
-            ("homem", "Homem"),
-            ("mulher", "Mulher"),
-            ("neutro", "Neutro"),
-        ],
-        default="neutro"
-    )
-
-    universidade = models.CharField(
-        max_length=100,
+        null=True,
         blank=True
     )
 
+    universidade = models.CharField(max_length=100)
+
+
+# =========================
+# ADMINISTRAÇÃO
+# =========================
+
+class Administracao(Pessoa):
+    nivelAcesso = models.CharField(max_length=20)
+
     def __str__(self):
-        return self.usuario.username
+        return f"{self.user.username} - Administrador"
 
 
 # =========================
@@ -44,11 +34,8 @@ class Perfil(models.Model):
 # =========================
 
 class Universidade(models.Model):
-
     nome = models.CharField(max_length=100)
-
     cidade = models.CharField(max_length=100)
-
     sigla = models.CharField(max_length=20)
 
     def __str__(self):
@@ -60,27 +47,28 @@ class Universidade(models.Model):
 # =========================
 
 class Competicao(models.Model):
-
     nome = models.CharField(max_length=100)
-
-    descricao = models.TextField()
-
+    descricao = models.CharField(max_length=1000)
     data = models.DateField()
-
     local = models.CharField(max_length=100)
-
     organizador = models.CharField(max_length=100)
 
-    usuario = models.ForeignKey(
-        User,
+    pessoa = models.ForeignKey(
+        Pessoa,
         on_delete=models.CASCADE,
-        related_name="competicoes"
+        related_name='competicoes'
     )
 
     universidade = models.ForeignKey(
         Universidade,
         on_delete=models.CASCADE,
-        related_name="competicoes"
+        related_name='competicoes'
+    )
+
+    administrador = models.ForeignKey(
+        Administracao,
+        on_delete=models.CASCADE,
+        related_name='competicoes_gerenciadas'
     )
 
     def __str__(self):
@@ -92,17 +80,14 @@ class Competicao(models.Model):
 # =========================
 
 class Resultado(models.Model):
-
     equipe = models.CharField(max_length=100)
-
     colocacao = models.IntegerField()
-
     pontuacao = models.FloatField()
 
     competicao = models.ForeignKey(
         Competicao,
         on_delete=models.CASCADE,
-        related_name="resultados"
+        related_name='resultados'
     )
 
     def __str__(self):
@@ -114,15 +99,13 @@ class Resultado(models.Model):
 # =========================
 
 class Calendario(models.Model):
-
     dataEvento = models.DateField()
-
     horario = models.CharField(max_length=20)
 
     competicao = models.OneToOneField(
         Competicao,
         on_delete=models.CASCADE,
-        related_name="calendario"
+        related_name='calendario'
     )
 
     def __str__(self):
@@ -134,19 +117,45 @@ class Calendario(models.Model):
 # =========================
 
 class Notificacao(models.Model):
-
-    usuario = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="notificacoes"
-    )
-
     mensagem = models.CharField(max_length=200)
-
     dataEnvio = models.DateField()
+
+    pessoa = models.ForeignKey(
+        Pessoa,
+        on_delete=models.CASCADE,
+        related_name='notificacoes'
+    )
 
     def __str__(self):
         return self.mensagem
+
+
+# =========================
+# PERFIL
+# =========================
+
+class Perfil(models.Model):
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
+
+    universidade = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    foto = models.ImageField(
+        upload_to='perfil/',
+        blank=True,
+        null=True
+    )
+
+    descricao = models.TextField()
 
 
 # =========================
@@ -154,21 +163,20 @@ class Notificacao(models.Model):
 # =========================
 
 class Favorito(models.Model):
-
-    usuario = models.ForeignKey(
+    user = models.ForeignKey(
         User,
-        on_delete=models.CASCADE,
-        related_name="favoritos"
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
     )
 
     competicao = models.ForeignKey(
         Competicao,
-        on_delete=models.CASCADE,
-        related_name="favoritado_por"
+        on_delete=models.CASCADE
     )
 
     def __str__(self):
-        return f"{self.usuario.username} - {self.competicao.nome}"
+        return f"{self.user.username} - {self.competicao.nome}"
 
 
 # =========================
@@ -176,18 +184,14 @@ class Favorito(models.Model):
 # =========================
 
 class Historico(models.Model):
-
-    usuario = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="historicos"
-    )
-
     ano = models.IntegerField()
-
     equipe = models.CharField(max_length=100)
-
     posicao = models.IntegerField()
+
+    pessoa = models.ForeignKey(
+        Pessoa,
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return f"{self.equipe} ({self.ano})"
@@ -198,11 +202,8 @@ class Historico(models.Model):
 # =========================
 
 class Pesquisa(models.Model):
-
     cidade = models.CharField(max_length=100)
-
     universidade = models.CharField(max_length=100)
-
     modalidade = models.CharField(max_length=100)
 
     def __str__(self):

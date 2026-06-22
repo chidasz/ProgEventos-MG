@@ -1,218 +1,42 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends 'base.html' %}
 
-<head>
+{% block title %}Universidades - ProgEventos-MG{% endblock %}
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block content %}
 
-<title>Universidades</title>
-
-<link rel="stylesheet"
-href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-<style>
-
-body{
-    background:#121212;
-    color:white;
-    margin:0;
-    padding:0;
-}
-
-.sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    width:250px;
-    height:100vh;
-    background:#1b1b1b;
-    padding-top:20px;
-}
-
-.sidebar h3{
-    text-align:center;
-    color:#28a745;
-    margin-bottom:30px;
-}
-
-.sidebar a{
-    display:block;
-    color:white;
-    padding:15px 25px;
-    text-decoration:none;
-}
-
-.sidebar a:hover{
-    background:#28a745;
-}
-
-.content{
-    margin-left:270px;
-    padding:40px;
-}
-
-.header{
-    background:#1f1f1f;
-    border:1px solid #333;
-    border-radius:10px;
-    padding:20px;
-    margin-bottom:30px;
-}
-
-.table-container{
-    background:#1f1f1f;
-    border-radius:10px;
-    padding:20px;
-    border:1px solid #333;
-}
-
-.table{
-    color:white;
-}
-
-.table thead{
-    background:#28a745;
-}
-
-.btn-editar{
-    background:#ffc107;
-    color:black;
-}
-
-.btn-editar:hover{
-    background:#e0a800;
-}
-
-.btn-excluir{
-    background:#dc3545;
-    color:white;
-}
-
-.btn-excluir:hover{
-    background:#c82333;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="sidebar">
-
-    <h3>ProgEventos-MG</h3>
-
-    <a href="/">Início</a>
-
-    <a href="/perfil/">Perfil</a>
-
-    <a href="/competicoes/">Competições</a>
-
-    <a href="/universidades/">Universidades</a>
-
-    <a href="/resultados/">Resultados</a>
-
-    <a href="/calendarios/">Calendário</a>
-
-    <a href="/notificacoes/">Notificações</a>
-
-    <a href="/favoritos/">Favoritos</a>
-
+<div class="page-header">
+    <h2><i class="bi bi-building" style="color:#28a745;"></i> Universidades</h2>
+    <p>Instituições participantes e organizadoras das competições.</p>
 </div>
 
-<div class="content">
-
-    <div class="header">
-
-        <h2>
-            <i class="bi bi-building"></i>
-            Universidades
-        </h2>
-
-        <p>
-            Universidades cadastradas na plataforma.
-        </p>
-
-    </div>
-
-    <div class="table-container">
-
-        <table class="table table-dark table-hover">
-
-            <thead>
-
-                <tr>
-                    <th>Nome</th>
-                    <th>Cidade</th>
-                    <th>Sigla</th>
-                    <th>Editar</th>
-                    <th>Excluir</th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                {% for universidade in universidades %}
-
-                <tr>
-
-                    <td>{{ universidade.nome }}</td>
-
-                    <td>{{ universidade.cidade }}</td>
-
-                    <td>{{ universidade.sigla }}</td>
-
-                    <td>
-
-                        <a href="/universidade/editar/{{ universidade.id }}/"
-                        class="btn btn-editar btn-sm">
-
-                            <i class="bi bi-pencil-square"></i>
-
-                        </a>
-
-                    </td>
-
-                    <td>
-
-                        <a href="/universidade/delete/{{ universidade.id }}/"
-                        class="btn btn-excluir btn-sm">
-
-                            <i class="bi bi-trash"></i>
-
-                        </a>
-
-                    </td>
-
-                </tr>
-
-                {% empty %}
-
-                <tr>
-
-                    <td colspan="5" class="text-center">
-
+<div class="table-container">
+    <table class="table table-dark table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cidade</th>
+                <th>Sigla</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for universidade in universidades %}
+            <tr>
+                <td>{{ universidade.nome }}</td>
+                <td>{{ universidade.cidade }}</td>
+                <td><span class="badge bg-success">{{ universidade.sigla }}</span></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">
+                    <div class="empty-state">
+                        <i class="bi bi-building"></i>
                         Nenhuma universidade cadastrada.
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
-</body>
-
-</html>
+{% endblock %}

@@ -1,62 +1,74 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
+from .forms import CompeticaoForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
+from django.contrib.auth import logout
+from .models import (
+    Competicao,
+    Universidade,
+    Resultado
+)
 
-from .models import *
-from .forms import *
-
-
-# =====================================
+# =========================
 # PÁGINA INICIAL
-# =====================================
+# =========================
 
-class IndexView(LoginRequiredMixin, View):
+class IndexView( View):
 
     def get(self, request):
 
+        proximas_competicoes = Competicao.objects.order_by('data')[:4]
+
+        context = {
+
+            'usuario': request.user,
+
+            'total_competicoes':
+                Competicao.objects.count(),
+
+            'total_universidades':
+                Universidade.objects.count(),
+
+            'total_resultados':
+                Resultado.objects.count(),
+
+            'proximas_competicoes':
+                proximas_competicoes,
+
+            'avatar_usuario':
+                request.session.get('avatar_usuario')
+
+        }
+
         return render(
             request,
-            "index.html"
+            'index.html',
+            context
         )
 
-
-# =====================================
+# =========================
 # LOGIN
-# =====================================
+# =========================
 
 class LoginView(View):
 
-    def get(self, request):
-
-        form = LoginForm()
-
-        return render(
-            request,
-            "login.html",
-            {
-                "form": form
-            }
-        )
-
     def post(self, request):
 
-        username = request.POST.get("username")
+        username = request.POST.get("nome")
+        password = request.POST.get("senha")
 
-        senha = request.POST.get("senha")
-
-        usuario = authenticate(
+        user = authenticate(
             request,
             username=username,
-            password=senha
+            password=password
         )
 
-        if usuario:
+        if user is not None:
 
-            login(request, usuario)
+            login(request, user)
 
-            return redirect("index")
+            return redirect('/')
 
         return render(
             request,
@@ -67,391 +79,206 @@ class LoginView(View):
         )
 
 
-# =====================================
-# LOGOUT
-# =====================================
-
-class LogoutView(View):
-
-    def get(self, request):
-
-        logout(request)
-
-        return redirect("login")
-
-
-# =====================================
-# CADASTRO
-# =====================================
-
-class CadastroView(View):
-
-    def get(self, request):
-
-        form = CadastroForm()
-
-        return render(
-            request,
-            "cadastro.html",
-            {
-                "form": form
-            }
-        )
-
-    def post(self, request):
-
-        form = CadastroForm(
-            request.POST,
-            request.FILES
-        )
-
-        if form.is_valid():
-
-            usuario = User.objects.create_user(
-                username=form.cleaned_data["username"],
-                email=form.cleaned_data["email"],
-                password=form.cleaned_data["senha"]
-            )
-
-            Perfil.objects.create(
-                usuario=usuario,
-                avatar=form.cleaned_data.get("avatar"),
-                foto=form.cleaned_data.get("foto"),
-                universidade=form.cleaned_data.get("universidade")
-            )
-
-            return redirect("login")
-
-        return render(
-            request,
-            "cadastro.html",
-            {
-                "form": form
-            }
-        )
-
-# =====================================
+# =========================
 # PERFIL
-# =====================================
+# =========================
 
-class PerfilView(LoginRequiredMixin, View):
-
+class PerfilView(View):
     def get(self, request):
-
-        perfil = request.user.perfil
-
+        perfis = Perfil.objects.all()
         return render(
             request,
-            "perfil.html",
-            {
-                "perfil": perfil
-            }
+            'perfil.html',
+            {'perfis': perfis}
         )
 
 
-# =====================================
-# EDITAR PERFIL
-# =====================================
+# =========================
+# ADMINISTRAÇÃO
+# =========================
 
-class EditarPerfilView(LoginRequiredMixin, View):
-
+class AdministracoesView(View):
     def get(self, request):
-
-        perfil = request.user.perfil
+        administracoes = Administracao.objects.all()
 
         return render(
             request,
-            "editar_perfil.html",
-            {
-                "perfil": perfil
-            }
+            'administracao.html',
+            {'administracoes': administracoes}
         )
 
-    def post(self, request):
 
-        usuario = request.user
-
-        perfil = usuario.perfil
-
-        usuario.username = request.POST.get("username")
-
-        usuario.email = request.POST.get("email")
-
-        senha = request.POST.get("senha")
-
-        if senha:
-            usuario.set_password(senha)
-
-        usuario.save()
-
-        perfil.avatar = request.POST.get("avatar")
-
-        perfil.universidade = request.POST.get("universidade")
-
-        if request.FILES.get("foto"):
-            perfil.foto = request.FILES.get("foto")
-
-        perfil.save()
-
-        return redirect("perfil")
-
-
-# =====================================
+# =========================
 # UNIVERSIDADES
-# =====================================
+# =========================
 
-class UniversidadesView(LoginRequiredMixin, View):
-
+class UniversidadesView(View):
     def get(self, request):
-
         universidades = Universidade.objects.all()
 
         return render(
             request,
-            "universidade.html",
-            {
-                "universidades": universidades
-            }
+            'universidade.html',
+            {'universidades': universidades}
         )
 
 
-# =====================================
+# =========================
 # COMPETIÇÕES
-# =====================================
+# =========================
 
-class CompeticoesView(LoginRequiredMixin, View):
-
+class CompeticoesView(View):
     def get(self, request):
-
         competicoes = Competicao.objects.all()
-
-        form = CompeticaoForm()
 
         return render(
             request,
-            "competicao.html",
-            {
-                "competicoes": competicoes,
-                "form": form
-            }
+            'competicao.html',
+            {'competicoes': competicoes}
         )
 
-    def post(self, request):
 
-        if not request.user.is_staff:
-            return redirect("competicoes")
+# CORRIGIDO: delete via POST com CSRF
+class DeleteCompeticaoView(LoginRequiredMixin, View):
+    def post(self, request, id):
+        competicao = get_object_or_404(Competicao, id=id)
+        competicao.delete()
+        return redirect('competicoes')
 
-        form = CompeticaoForm(request.POST)
-
-        if form.is_valid():
-
-            competicao = form.save(commit=False)
-
-            competicao.usuario = request.user
-
-            competicao.save()
-
-        return redirect("competicoes")
-
-
-# =====================================
-# EDITAR COMPETIÇÃO
-# =====================================
 
 class EditarCompeticaoView(LoginRequiredMixin, View):
 
     def get(self, request, id):
-
-        competicao = get_object_or_404(
-            Competicao,
-            id=id
-        )
-
-        form = CompeticaoForm(
-            instance=competicao
-        )
+        competicao = get_object_or_404(Competicao, id=id)
+        form = CompeticaoForm(instance=competicao)
 
         return render(
             request,
-            "editar_competicao.html",
-            {
-                "form": form
-            }
+            'editar_competicao.html',
+            {'form': form}
         )
 
     def post(self, request, id):
-
-        competicao = get_object_or_404(
-            Competicao,
-            id=id
-        )
-
-        form = CompeticaoForm(
-            request.POST,
-            instance=competicao
-        )
+        competicao = get_object_or_404(Competicao, id=id)
+        form = CompeticaoForm(request.POST, instance=competicao)
 
         if form.is_valid():
-
-            obj = form.save(commit=False)
-
-            obj.usuario = competicao.usuario
-
-            obj.save()
-
-            return redirect("competicoes")
+            form.save()
+            return redirect('competicoes')
 
         return render(
             request,
-            "editar_competicao.html",
-            {
-                "form": form
-            }
+            'editar_competicao.html',
+            {'form': form}
         )
 
 
-# =====================================
-# EXCLUIR COMPETIÇÃO
-# =====================================
-
-class DeleteCompeticaoView(LoginRequiredMixin, View):
-
-    def get(self, request, id):
-
-        competicao = get_object_or_404(
-            Competicao,
-            id=id
-        )
-
-        competicao.delete()
-
-        return redirect("competicoes")
-
-
-# =====================================
+# =========================
 # RESULTADOS
-# =====================================
+# =========================
 
-class ResultadosView(LoginRequiredMixin, View):
-
+class ResultadosView(View):
     def get(self, request):
-
         resultados = Resultado.objects.all()
 
         return render(
             request,
-            "resultado.html",
-            {
-                "resultados": resultados
-            }
+            'resultado.html',
+            {'resultados': resultados}
         )
 
 
-# =====================================
+# =========================
 # CALENDÁRIOS
-# =====================================
+# =========================
 
-class CalendariosView(LoginRequiredMixin, View):
-
+class CalendariosView(View):
     def get(self, request):
-
         calendarios = Calendario.objects.all()
 
         return render(
             request,
-            "calendario.html",
-            {
-                "calendarios": calendarios
-            }
+            'calendario.html',
+            {'calendarios': calendarios}
         )
 
 
-# =====================================
+# =========================
 # NOTIFICAÇÕES
-# =====================================
+# =========================
 
-class NotificacoesView(LoginRequiredMixin, View):
-
+class NotificacoesView(View):
     def get(self, request):
-
-        notificacoes = Notificacao.objects.filter(
-            usuario=request.user
-        )
+        notificacoes = Notificacao.objects.all()
 
         return render(
             request,
-            "notificacao.html",
-            {
-                "notificacoes": notificacoes
-            }
+            'notificacao.html',
+            {'notificacoes': notificacoes}
         )
 
 
-# =====================================
+# =========================
 # FAVORITOS
-# =====================================
+# =========================
 
-class FavoritosView(LoginRequiredMixin, View):
-
+class FavoritosView(View):
     def get(self, request):
-
-        favoritos = Favorito.objects.filter(
-            usuario=request.user
-        )
+        favoritos = Favorito.objects.all()
 
         return render(
             request,
-            "favoritos.html",
-            {
-                "favoritos": favoritos
-            }
+            'favoritos.html',
+            {'favoritos': favoritos}
         )
 
 
-# =====================================
+# =========================
 # HISTÓRICO
-# =====================================
+# =========================
 
-class HistoricosView(LoginRequiredMixin, View):
-
+class HistoricosView(View):
     def get(self, request):
-
-        historicos = Historico.objects.filter(
-            usuario=request.user
-        )
+        historicos = Historico.objects.all()
 
         return render(
             request,
-            "historicos.html",
-            {
-                "historicos": historicos
-            }
+            'historicos.html',
+            {'historicos': historicos}
         )
 
 
-# =====================================
+# =========================
 # PESQUISA
-# =====================================
+# =========================
 
-class PesquisaView(LoginRequiredMixin, View):
+class PesquisaView(View):
 
     def get(self, request):
-
-        pesquisa = request.GET.get("pesquisa", "")
-
+        pesquisa    = request.GET.get('pesquisa', '')
         competicoes = Competicao.objects.all()
 
         if pesquisa:
-
-            competicoes = competicoes.filter(
+            competicoes = Competicao.objects.filter(
                 nome__icontains=pesquisa
             )
 
         return render(
             request,
-            "pesquisa.html",
+            'pesquisa.html',
             {
-                "competicoes": competicoes,
-                "pesquisa": pesquisa
+                'competicoes': competicoes,
+                'pesquisa':    pesquisa
             }
         )
+
+
+# =========================
+# LOGOUT
+# =========================
+
+class LogoutView(View):
+
+    def get(self, request):
+        logout(request)
+        return redirect('index')

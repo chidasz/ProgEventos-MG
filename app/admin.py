@@ -2,29 +2,30 @@ from django.contrib import admin
 from .models import *
 
 
+# INLINE → Resultado dentro de Competicao
 class ResultadoInline(admin.TabularInline):
     model = Resultado
     extra = 1
 
 
+# CUSTOMIZAÇÃO DO ADMIN DE COMPETIÇÃO
 class CompeticaoAdmin(admin.ModelAdmin):
-
     list_display = (
-        "nome",
-        "data",
-        "local",
-        "organizador"
+        'nome',
+        'data',
+        'local',
+        'organizador'
     )
 
     search_fields = (
-        "nome",
-        "organizador",
-        "local"
+        'nome',
+        'organizador',
+        'local'
     )
 
     list_filter = (
-        "data",
-        "local"
+        'data',
+        'local'
     )
 
     inlines = [
@@ -32,21 +33,49 @@ class CompeticaoAdmin(admin.ModelAdmin):
     ]
 
 
-class UniversidadeAdmin(admin.ModelAdmin):
+# CUSTOMIZAÇÃO DO ADMIN DE PESSOA
+class PessoaAdmin(admin.ModelAdmin):
 
     list_display = (
-        "nome",
-        "cidade",
-        "sigla"
+        'get_username',
+        'get_email',
+        'universidade'
     )
 
     search_fields = (
-        "nome",
-        "cidade",
-        "sigla"
+        'user__username',
+        'user__email'
+    )
+
+    def get_username(self, obj):
+        return obj.user.username
+
+    get_username.short_description = 'Usuário'
+
+    def get_email(self, obj):
+        return obj.user.email
+
+    get_email.short_description = 'E-mail'
+
+
+# CUSTOMIZAÇÃO DO ADMIN DE UNIVERSIDADE
+class UniversidadeAdmin(admin.ModelAdmin):
+    list_display = (
+        'nome',
+        'cidade',
+        'sigla'
+    )
+
+    search_fields = (
+        'nome',
+        'cidade',
+        'sigla'
     )
 
 
+# REGISTROS
+admin.site.register(Pessoa, PessoaAdmin)
+admin.site.register(Administracao)
 admin.site.register(Universidade, UniversidadeAdmin)
 admin.site.register(Competicao, CompeticaoAdmin)
 admin.site.register(Resultado)
