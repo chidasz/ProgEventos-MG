@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultados - ProgEventos-MG{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h2>
+        <i class="bi bi-award-fill"></i>
+        Resultados
+    </h2>
+    <p>Rankings e placar de todas as competições realizadas</p>
+</div>
+
+{% if grupos %}
+
+<!-- Iteração por competição -->
+{% for grupo in grupos %}
+
+<div style="margin-bottom: 50px;">
+    <h3 style="color: white; font-size: 18px; font-weight: 700; margin-bottom: 25px; 
+               padding-bottom: 12px; border-bottom: 3px solid #28a745;">
+        <i class="bi bi-trophy-fill" style="color: #28a745;"></i>
+        {{ grupo.competicao.nome }}
+    </h3>
+
+    <div class="row">
+        <!-- PÓDIO (3 PRIMEIROS) -->
+        <div class="col-12 mb-4">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+                        gap: 16px; perspective: 1000px; margin-bottom: 30px;">
+                
+                <!-- 1º LUGAR (OURO) -->
+                {% if grupo.resultados.0 %}
+                <div style="order: 2; grid-column: span 1;">
+                    <div style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.05)); 
+                                border: 2px solid #FFD700; text-align: center; border-radius: 12px; 
+                                padding: 20px; transform: scale(1.08);">
+                        <div style="font-size: 45px; margin-bottom: 10px;">🥇</div>
+                        <div style="font-size: 14px; font-weight: 800; color: #FFD700; margin-bottom: 8px; text-transform: uppercase;">
+                            1º Lugar
+                        </div>
+                        <h4 style="margin: 0 0 12px; color: white; font-size: 14px; font-weight: 700;">
+                            {{ grupo.resultados.0.equipe }}
+                        </h4>
+                        <div style="background: rgba(255, 193, 7, 0.2); border-radius: 8px; padding: 10px;">
+                            <div style="color: #FFD700; font-size: 18px; font-weight: 800;">
+                                {{ grupo.resultados.0.pontuacao|floatformat:1 }}
+                            </div>
+                            <div style="color: #999; font-size: 11px; margin-top: 4px; text-transform: uppercase;">
+                                pontos
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- 2º LUGAR (PRATA) -->
+                {% if grupo.resultados.1 %}
+                <div style="order: 1; grid-column: span 1;">
+                    <div style="background: linear-gradient(135deg, rgba(192, 192, 192, 0.15), rgba(192, 192, 192, 0.05)); 
+                                border: 2px solid #C0C0C0; text-align: center; border-radius: 12px; padding: 20px;">
+                        <div style="font-size: 40px; margin-bottom: 10px;">🥈</div>
+                        <div style="font-size: 13px; font-weight: 800; color: #C0C0C0; margin-bottom: 8px; text-transform: uppercase;">
+                            2º Lugar
+                        </div>
+                        <h4 style="margin: 0 0 12px; color: white; font-size: 13px; font-weight: 700;">
+                            {{ grupo.resultados.1.equipe }}
+                        </h4>
+                        <div style="background: rgba(192, 192, 192, 0.15); border-radius: 8px; padding: 10px;">
+                            <div style="color: #C0C0C0; font-size: 16px; font-weight: 800;">
+                                {{ grupo.resultados.1.pontuacao|floatformat:1 }}
+                            </div>
+                            <div style="color: #999; font-size: 11px; margin-top: 4px; text-transform: uppercase;">
+                                pontos
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- 3º LUGAR (BRONZE) -->
+                {% if grupo.resultados.2 %}
+                <div style="order: 3; grid-column: span 1;">
+                    <div style="background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(205, 127, 50, 0.05)); 
+                                border: 2px solid #CD7F32; text-align: center; border-radius: 12px; padding: 20px;">
+                        <div style="font-size: 40px; margin-bottom: 10px;">🥉</div>
+                        <div style="font-size: 13px; font-weight: 800; color: #CD7F32; margin-bottom: 8px; text-transform: uppercase;">
+                            3º Lugar
+                        </div>
+                        <h4 style="margin: 0 0 12px; color: white; font-size: 13px; font-weight: 700;">
+                            {{ grupo.resultados.2.equipe }}
+                        </h4>
+                        <div style="background: rgba(205, 127, 50, 0.15); border-radius: 8px; padding: 10px;">
+                            <div style="color: #CD7F32; font-size: 16px; font-weight: 800;">
+                                {{ grupo.resultados.2.pontuacao|floatformat:1 }}
+                            </div>
+                            <div style="color: #999; font-size: 11px; margin-top: 4px; text-transform: uppercase;">
+                                pontos
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- RANKING COMPLETO -->
+        {% if grupo.resultados %}
+        <div class="col-12">
+            <div style="background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: 12px; padding: 0; overflow: hidden;">
+                <div style="padding: 20px; background: linear-gradient(90deg, #28a745, #22a844); color: white; font-weight: 700;">
+                    <h4 style="margin: 0;">Ranking Completo</h4>
+                </div>
+                
+                <div style="max-height: 400px; overflow-y: auto;">
+                    {% for resultado in grupo.resultados %}
+                    <div style="display: flex; align-items: center; justify-content: space-between; 
+                               padding: 14px 20px; border-bottom: 1px solid #2e2e2e; 
+                               transition: all 0.2s ease;">
+                        
+                        <!-- Posição -->
+                        <div style="display: flex; align-items: center; gap: 12px; min-width: 100px;">
+                            {% if resultado.colocacao == 1 %}
+                                <span style="background: linear-gradient(135deg, #FFD700, #FFA500); 
+                                           color: white; padding: 6px 12px; border-radius: 6px; 
+                                           font-weight: 800; font-size: 13px; min-width: 45px; text-align: center;">
+                                    🥇 1º
+                                </span>
+                            {% elif resultado.colocacao == 2 %}
+                                <span style="background: linear-gradient(135deg, #C0C0C0, #A9A9A9); 
+                                           color: white; padding: 6px 12px; border-radius: 6px; 
+                                           font-weight: 800; font-size: 13px; min-width: 45px; text-align: center;">
+                                    🥈 2º
+                                </span>
+                            {% elif resultado.colocacao == 3 %}
+                                <span style="background: linear-gradient(135deg, #CD7F32, #8B4513); 
+                                           color: white; padding: 6px 12px; border-radius: 6px; 
+                                           font-weight: 800; font-size: 13px; min-width: 45px; text-align: center;">
+                                    🥉 3º
+                                </span>
+                            {% else %}
+                                <span style="background: rgba(40, 167, 69, 0.2); 
+                                           color: #28a745; padding: 6px 12px; border-radius: 6px; 
+                                           font-weight: 700; font-size: 13px; min-width: 45px; text-align: center;">
+                                    {{ resultado.colocacao }}º
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Nome da Equipe -->
+                        <div style="flex: 1; margin-left: 16px; color: white; font-weight: 600;">
+                            {{ resultado.equipe }}
+                        </div>
+
+                        <!-- Pontuação -->
+                        <div style="text-align: right; color: #28a745; font-weight: 700; font-size: 15px; min-width: 100px;">
+                            {{ resultado.pontuacao|floatformat:1 }} pts
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <hr style="border-color: #2e2e2e; margin: 40px 0 0;">
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="empty-state">
+    <i class="bi bi-award"></i>
+    <h3>Nenhum resultado cadastrado</h3>
+    <p style="color: #666;">Os resultados das competições aparecerão aqui quando forem publicados</p>
+</div>
+
+{% endif %}
+
+{% endblock %}

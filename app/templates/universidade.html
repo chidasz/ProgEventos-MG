@@ -5,38 +5,106 @@
 {% block content %}
 
 <div class="page-header">
-    <h2><i class="bi bi-building" style="color:#28a745;"></i> Universidades</h2>
-    <p>Instituições participantes e organizadoras das competições.</p>
+    <h2>
+        <i class="bi bi-building"></i>
+        Universidades
+    </h2>
+    <p>Instituições que participam de maratonas e olimpíadas de programação</p>
 </div>
 
-<div class="table-container">
-    <table class="table table-dark table-hover align-middle">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Cidade</th>
-                <th>Sigla</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for universidade in universidades %}
-            <tr>
-                <td>{{ universidade.nome }}</td>
-                <td>{{ universidade.cidade }}</td>
-                <td><span class="badge bg-success">{{ universidade.sigla }}</span></td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="3">
-                    <div class="empty-state">
-                        <i class="bi bi-building"></i>
-                        Nenhuma universidade cadastrada.
-                    </div>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% if universidades %}
+
+<!-- CARDS VIEW -->
+<div class="row g-3 mb-4">
+    {% for universidade in universidades %}
+    <div class="col-md-6 col-lg-4">
+        <div class="info-card h-100" style="cursor: default;">
+            <div style="font-size: 40px; color: #28a745; margin-bottom: 15px;">
+                <i class="bi bi-building"></i>
+            </div>
+            <h3 style="margin: 0 0 8px; color: white; font-weight: 700;">
+                {{ universidade.nome }}
+            </h3>
+            <p style="color: #28a745; font-weight: 600; margin: 0 0 12px;">
+                {{ universidade.sigla }}
+            </p>
+            <p style="color: #888; margin: 0 0 16px; font-size: 13px;">
+                <i class="bi bi-geo-alt-fill"></i>
+                {{ universidade.cidade }}
+            </p>
+            
+            <!-- Stats -->
+            <div style="background: rgba(40, 167, 69, 0.05); border-radius: 8px; padding: 12px; 
+                        margin-bottom: 16px; border-left: 3px solid #28a745;">
+                <div style="font-size: 18px; font-weight: 800; color: #28a745;">
+                    {{ universidade.competicoes.count }}
+                </div>
+                <div style="font-size: 12px; color: #888; margin-top: 4px;">
+                    Competições participando
+                </div>
+            </div>
+
+            <a href="#" class="btn btn-success w-100 btn-sm">
+                <i class="bi bi-arrow-right"></i> Ver Detalhes
+            </a>
+        </div>
+    </div>
+    {% endfor %}
 </div>
+
+<!-- TABLE VIEW -->
+<div style="margin-top: 40px;">
+    <h3 style="margin-bottom: 20px; color: white; font-size: 18px; font-weight: 700;">
+        <i class="bi bi-table"></i> Visualização Completa
+    </h3>
+    
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th><i class="bi bi-building"></i> Instituição</th>
+                        <th><i class="bi bi-code"></i> Sigla</th>
+                        <th><i class="bi bi-geo-alt-fill"></i> Cidade</th>
+                        <th><i class="bi bi-trophy-fill"></i> Competições</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for universidade in universidades %}
+                    <tr>
+                        <td style="font-weight: 600; color: #28a745;">
+                            <i class="bi bi-building"></i>
+                            {{ universidade.nome }}
+                        </td>
+                        <td>
+                            <span class="badge badge-success">
+                                {{ universidade.sigla }}
+                            </span>
+                        </td>
+                        <td>{{ universidade.cidade }}</td>
+                        <td>
+                            <span style="background: rgba(40, 167, 69, 0.2); 
+                                        color: #28a745; padding: 6px 12px; border-radius: 6px; 
+                                        font-weight: 600; font-size: 13px; display: inline-block;">
+                                {{ universidade.competicoes.count }} eventos
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div class="empty-state">
+    <i class="bi bi-building"></i>
+    <h3>Nenhuma universidade cadastrada</h3>
+    <p style="color: #666;">As instituições aparecerão aqui quando forem adicionadas ao sistema</p>
+</div>
+
+{% endif %}
 
 {% endblock %}

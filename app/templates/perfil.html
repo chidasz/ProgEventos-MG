@@ -1,224 +1,229 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
+{% extends 'base.html' %}
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Meu Perfil - ProgEventos-MG{% endblock %}
 
-<title>Meu Perfil</title>
+{% block content %}
 
-<link rel="stylesheet"
-href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-<style>
-
-body{
-    background:#121212;
-    color:white;
-    margin:0;
-    padding:0;
-}
-
-.sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    width:250px;
-    height:100vh;
-    background:#1b1b1b;
-    padding-top:20px;
-}
-
-.sidebar h3{
-    text-align:center;
-    color:#28a745;
-    margin-bottom:30px;
-}
-
-.sidebar a{
-    display:block;
-    padding:15px 25px;
-    color:white;
-    text-decoration:none;
-}
-
-.sidebar a:hover{
-    background:#28a745;
-}
-
-.content{
-    margin-left:270px;
-    padding:40px;
-}
-
-.profile-card{
-    background:#1f1f1f;
-    border:1px solid #333;
-    border-radius:15px;
-    padding:40px;
-    text-align:center;
-}
-
-.profile-avatar{
-    width:130px;
-    height:130px;
-    border-radius:50%;
-    border:4px solid #28a745;
-    object-fit:cover;
-    margin-bottom:20px;
-}
-
-.profile-name{
-    font-size:28px;
-    font-weight:bold;
-}
-
-.profile-email{
-    color:#aaa;
-    margin-bottom:30px;
-}
-
-.info-card{
-    background:#1f1f1f;
-    border:1px solid #333;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    margin-top:20px;
-}
-
-.btn-custom{
-    background:#28a745;
-    color:white;
-    border:none;
-}
-
-.btn-custom:hover{
-    background:#218838;
-    color:white;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="sidebar">
-
-    <h3>ProgEventos-MG</h3>
-
-    <a href="/">Início</a>
-    <a href="/perfil/">Perfil</a>
-    <a href="/competicoes/">Competições</a>
-    <a href="/universidades/">Universidades</a>
-    <a href="/resultados/">Resultados</a>
-    <a href="/calendarios/">Calendário</a>
-    <a href="/notificacoes/">Notificações</a>
-    <a href="/favoritos/">Favoritos</a>
-    <a href="/admin/">Administração</a>
-
+<div class="page-header">
+    <h2>
+        <i class="bi bi-person-circle"></i>
+        Meu Perfil
+    </h2>
+    <p>Informações pessoais e preferências da conta</p>
 </div>
 
-<div class="content">
+{% if request.user.is_authenticated %}
 
-    <div class="profile-card">
-
-        {% if request.session.avatar_usuario == 'homem' %}
-
-            <img
-            src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
-            class="profile-avatar">
-
-        {% elif request.session.avatar_usuario == 'mulher' %}
-
-            <img
-            src="https://cdn-icons-png.flaticon.com/512/4140/4140051.png"
-            class="profile-avatar">
-
-        {% else %}
-
-            <img
-            src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-            class="profile-avatar">
-
-        {% endif %}
-
-        <div class="profile-name">
-            {{ request.session.nome_usuario }}
-        </div>
-
-        <div class="profile-email">
-            {{ request.session.email_usuario }}
-        </div>
-
-    </div>
-
-    <div class="row">
-
-        <div class="col-md-4">
-
-            <div class="info-card">
-
-                <h4>
-                    <i class="bi bi-star-fill"></i>
-                </h4>
-
-                <h5>Favoritos</h5>
-
-                <a href="/favoritos/"
-                class="btn btn-custom">
-                    Ver Favoritos
-                </a>
-
+<!-- Profile Card -->
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card-container" style="text-align: center; padding: 40px;">
+        
+        <!-- Avatar -->
+        <div style="margin-bottom: 20px;">
+            <div style="width: 120px; height: 120px; border-radius: 50%; 
+                       background: linear-gradient(135deg, #28a745, #22a844);
+                       display: flex; align-items: center; justify-content: center;
+                       margin: 0 auto; border: 4px solid #28a745;">
+                <i class="bi bi-person-fill" style="font-size: 60px; color: white;"></i>
             </div>
-
         </div>
 
-        <div class="col-md-4">
+        <!-- User Info -->
+        <h1 style="margin: 20px 0 8px; color: white; font-weight: 800; font-size: 28px;">
+            {{ request.user.get_full_name|default:request.user.username }}
+        </h1>
+        <p style="margin: 0 0 20px; color: #888; font-size: 14px;">
+            <i class="bi bi-envelope-fill"></i>
+            {{ request.user.email }}
+        </p>
 
+        <div style="background: rgba(40, 167, 69, 0.1); border-radius: 8px; 
+                   padding: 12px; margin-bottom: 24px; border-left: 3px solid #28a745;">
+            <div style="color: #999; font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">
+                Tipo de Conta
+            </div>
+            <div style="color: #28a745; font-weight: 600;">
+                {% if request.user.is_staff %}
+                    Administrador
+                {% else %}
+                    Participante
+                {% endif %}
+            </div>
+        </div>
+
+        <a href="#" class="btn btn-success w-100" style="margin-bottom: 12px;">
+            <i class="bi bi-pencil-square"></i> Editar Perfil
+        </a>
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger w-100">
+            <i class="bi bi-box-arrow-right"></i> Sair
+        </a>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div style="margin-top: 40px;">
+    <h3 style="color: white; font-size: 18px; font-weight: 700; margin-bottom: 20px;">
+        <i class="bi bi-bar-chart-fill"></i> Resumo de Atividades
+    </h3>
+
+    <div class="row g-3">
+        <div class="col-md-3 col-sm-6">
             <div class="info-card">
+                <i class="bi bi-heart-fill"></i>
+                <h3 style="color: #28a745;">0</h3>
+                <p style="margin-bottom: 0;">Favoritos</p>
+            </div>
+        </div>
 
-                <h4>
+        <div class="col-md-3 col-sm-6">
+            <div class="info-card">
+                <i class="bi bi-trophy-fill"></i>
+                <h3 style="color: #28a745;">0</h3>
+                <p style="margin-bottom: 0;">Participações</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="info-card">
+                <i class="bi bi-bell-fill"></i>
+                <h3 style="color: #28a745;">0</h3>
+                <p style="margin-bottom: 0;">Notificações</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="info-card">
+                <i class="bi bi-award-fill"></i>
+                <h3 style="color: #28a745;">0</h3>
+                <p style="margin-bottom: 0;">Conquistas</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Menu Rápido -->
+<div style="margin-top: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <h3 style="color: white; font-size: 18px; font-weight: 700; margin-bottom: 20px;">
+        <i class="bi bi-lightning-fill"></i> Atalhos Rápidos
+    </h3>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <a href="{% url 'favoritos' %}" class="data-card h-100" style="text-decoration: none; display: flex; align-items: center; gap: 16px;">
+                <div style="background: rgba(40, 167, 69, 0.2); border-radius: 10px; 
+                           padding: 16px; color: #28a745; font-size: 24px;">
+                    <i class="bi bi-heart-fill"></i>
+                </div>
+                <div>
+                    <h4 style="margin: 0; color: white; font-weight: 700;">Favoritos</h4>
+                    <p style="margin: 4px 0 0; color: #888; font-size: 13px;">
+                        Veja suas competições favoritas
+                    </p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a href="{% url 'historicos' %}" class="data-card h-100" style="text-decoration: none; display: flex; align-items: center; gap: 16px;">
+                <div style="background: rgba(40, 167, 69, 0.2); border-radius: 10px; 
+                           padding: 16px; color: #28a745; font-size: 24px;">
                     <i class="bi bi-clock-history"></i>
-                </h4>
-
-                <h5>Histórico</h5>
-
-                <a href="/historicos/"
-                class="btn btn-custom">
-                    Ver Histórico
-                </a>
-
-            </div>
-
+                </div>
+                <div>
+                    <h4 style="margin: 0; color: white; font-weight: 700;">Histórico</h4>
+                    <p style="margin: 4px 0 0; color: #888; font-size: 13px;">
+                        Veja seu histórico de participações
+                    </p>
+                </div>
+            </a>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6">
+            <a href="{% url 'notificacoes' %}" class="data-card h-100" style="text-decoration: none; display: flex; align-items: center; gap: 16px;">
+                <div style="background: rgba(40, 167, 69, 0.2); border-radius: 10px; 
+                           padding: 16px; color: #28a745; font-size: 24px;">
+                    <i class="bi bi-bell-fill"></i>
+                </div>
+                <div>
+                    <h4 style="margin: 0; color: white; font-weight: 700;">Notificações</h4>
+                    <p style="margin: 4px 0 0; color: #888; font-size: 13px;">
+                        Gerencie suas notificações
+                    </p>
+                </div>
+            </a>
+        </div>
 
-            <div class="info-card">
-
-                <h4>
+        <div class="col-md-6">
+            <a href="{% url 'competicoes' %}" class="data-card h-100" style="text-decoration: none; display: flex; align-items: center; gap: 16px;">
+                <div style="background: rgba(40, 167, 69, 0.2); border-radius: 10px; 
+                           padding: 16px; color: #28a745; font-size: 24px;">
                     <i class="bi bi-trophy-fill"></i>
-                </h4>
-
-                <h5>Competições</h5>
-
-                <a href="/competicoes/"
-                class="btn btn-custom">
-                    Explorar
-                </a>
-
-            </div>
-
+                </div>
+                <div>
+                    <h4 style="margin: 0; color: white; font-weight: 700;">Competições</h4>
+                    <p style="margin: 4px 0 0; color: #888; font-size: 13px;">
+                        Explore todas as competições
+                    </p>
+                </div>
+            </a>
         </div>
-
     </div>
-
 </div>
 
-</body>
-</html>
+<!-- Settings Section -->
+<div style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+    <h3 style="color: white; font-size: 18px; font-weight: 700; margin-bottom: 20px;">
+        <i class="bi bi-gear-fill"></i> Configurações da Conta
+    </h3>
+
+    <div class="card-container">
+        <div class="form-group">
+            <label class="form-label">Preferência de Idioma</label>
+            <select class="form-select">
+                <option selected>Português (Brasil)</option>
+                <option>English</option>
+                <option>Español</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Tema</label>
+            <select class="form-select">
+                <option selected>Escuro (Padrão)</option>
+                <option>Claro</option>
+                <option>Automático</option>
+            </select>
+        </div>
+
+        <div class="form-check" style="margin-bottom: 20px;">
+            <input class="form-check-input" type="checkbox" id="emailNotif" checked>
+            <label class="form-check-label" for="emailNotif">
+                Receber notificações por email
+            </label>
+        </div>
+
+        <button type="button" class="btn btn-success w-100" style="margin-bottom: 12px;">
+            <i class="bi bi-check-circle"></i> Salvar Alterações
+        </button>
+        <a href="#" class="btn btn-outline-danger w-100">
+            <i class="bi bi-trash"></i> Deletar Conta
+        </a>
+    </div>
+</div>
+
+{% else %}
+
+<div class="empty-state">
+    <i class="bi bi-person-circle"></i>
+    <h3>Você não está logado</h3>
+    <p style="color: #666; margin-bottom: 20px;">
+        Faça login para acessar seu perfil pessoal
+    </p>
+    <a href="{% url 'login' %}" class="btn btn-success">
+        <i class="bi bi-box-arrow-in-right"></i> Fazer Login
+    </a>
+</div>
+
+{% endif %}
+
+{% endblock %}

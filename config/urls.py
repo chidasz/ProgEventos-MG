@@ -13,6 +13,7 @@ urlpatterns = [
     # Usuário
     path('login/', LoginView.as_view(), name='login'),
     path('perfil/', PerfilView.as_view(), name='perfil'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 
     # Competições
     path('competicoes/', CompeticoesView.as_view(), name='competicoes'),
@@ -62,6 +63,13 @@ urlpatterns = [
         name='favoritos'
     ),
 
+    # NOVO: Toggle Favorito (AJAX)
+    path(
+        'favorito/toggle/<int:competicao_id>/',
+        ToggleFavoritoView.as_view(),
+        name='toggle_favorito'
+    ),
+
     # Histórico
     path(
         'historicos/',
@@ -82,11 +90,4 @@ urlpatterns = [
         AdministracoesView.as_view(),
         name='administracoes'
     ),
-
-    #logout 
-    path(
-        'logout/',
-        LogoutView.as_view(),
-        name='logout'
-),
 ]

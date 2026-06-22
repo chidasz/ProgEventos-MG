@@ -4,283 +4,557 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ProgEventos</title>
+    <title>Login - ProgEventos-MG</title>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+          crossorigin="anonymous">
+    
     <link rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
+    :root {
+        --primary-color: #28a745;
+        --dark-bg: #121212;
+        --dark-secondary: #1f1f1f;
+        --border-color: #2e2e2e;
+    }
 
-        body{
-            background-color:#121212;
-            color:white;
-            height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
+    body {
+        background: linear-gradient(135deg, var(--dark-bg) 0%, #0a0a0a 100%);
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .login-wrapper {
+        width: 100%;
+        max-width: 450px;
+        padding: 20px;
+    }
+
+    .logo-section {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .logo-icon {
+        font-size: 60px;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        display: inline-block;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .logo-title {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, var(--primary-color), #34ce57);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .logo-subtitle {
+        font-size: 14px;
+        color: #888;
+        font-weight: 500;
+    }
+
+    .login-card {
+        background: linear-gradient(135deg, var(--dark-secondary) 0%, #2a2a2a 100%);
+        border: 1px solid rgba(40, 167, 69, 0.1);
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        overflow: hidden;
+        animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-card-header {
+        background: linear-gradient(90deg, var(--primary-color) 0%, #22a844 100%);
+        padding: 30px;
+        text-align: center;
+    }
+
+    .login-card-header h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .login-card-body {
+        padding: 40px;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        color: #ddd;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+    }
+
+    .form-control {
+        background-color: #2b2b2b;
+        border: 2px solid var(--border-color);
+        color: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .form-control:focus {
+        background-color: #2b2b2b;
+        color: white;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+        border: 2px solid var(--primary-color);
+    }
+
+    .form-control::placeholder {
+        color: #666;
+    }
+
+    .form-check {
+        margin-bottom: 20px;
+    }
+
+    .form-check-input {
+        width: 18px;
+        height: 18px;
+        margin-top: 3px;
+        background-color: #2b2b2b;
+        border: 2px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+        border-color: var(--primary-color);
+    }
+
+    .form-check-label {
+        color: #ddd;
+        margin-left: 8px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    /* ==================== AVATAR SECTION ==================== */
+    .avatar-label {
+        color: #ddd;
+        font-weight: 600;
+        margin-bottom: 16px;
+        display: block;
+        font-size: 14px;
+    }
+
+    .avatar-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .avatar-option {
+        cursor: pointer;
+        text-align: center;
+        position: relative;
+    }
+
+    .avatar-option input {
+        display: none;
+    }
+
+    .avatar-option-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .avatar-option img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        border: 3px solid var(--border-color);
+        transition: all 0.3s ease;
+        display: block;
+    }
+
+    .avatar-option span {
+        display: block;
+        margin-top: 10px;
+        color: #999;
+        font-size: 12px;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .avatar-option input:checked + .avatar-option-wrapper img {
+        border: 3px solid var(--primary-color);
+        transform: scale(1.08);
+        box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
+    }
+
+    .avatar-option input:checked ~ span {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    /* ==================== FILE INPUT ==================== */
+    .file-input-wrapper {
+        position: relative;
+        margin-bottom: 24px;
+    }
+
+    .file-input-label {
+        display: block;
+        padding: 12px 16px;
+        background-color: #2b2b2b;
+        border: 2px dashed var(--border-color);
+        border-radius: 8px;
+        text-align: center;
+        color: #888;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .file-input-wrapper input[type="file"] {
+        display: none;
+    }
+
+    .file-input-label:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background-color: rgba(40, 167, 69, 0.05);
+    }
+
+    /* ==================== BUTTONS ==================== */
+    .btn-login,
+    .btn-admin {
+        width: 100%;
+        padding: 14px;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-bottom: 12px;
+        font-size: 15px;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-login {
+        background: linear-gradient(90deg, var(--primary-color) 0%, #22a844 100%);
+        color: white;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(40, 167, 69, 0.4);
+        background: linear-gradient(90deg, #22a844 0%, var(--primary-color) 100%);
+    }
+
+    .btn-admin {
+        background: rgba(220, 53, 69, 0.2);
+        color: #ff6b6b;
+        border: 2px solid #ff6b6b;
+    }
+
+    .btn-admin:hover {
+        background: #ff6b6b;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(220, 53, 69, 0.4);
+    }
+
+    /* ==================== DIVIDER ==================== */
+    .divider-section {
+        display: flex;
+        align-items: center;
+        margin: 28px 0;
+        color: #666;
+    }
+
+    .divider-line {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+    }
+
+    .divider-text {
+        padding: 0 12px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    /* ==================== LINKS ==================== */
+    .back-link {
+        text-align: center;
+        margin-top: 24px;
+    }
+
+    .back-link a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .back-link a:hover {
+        color: #34ce57;
+        gap: 10px;
+    }
+
+    /* ==================== ERROR MESSAGE ==================== */
+    .alert {
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        border-radius: 8px;
+        background: rgba(220, 53, 69, 0.1);
+        color: #ff6b6b;
+        padding: 14px 16px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+    }
+
+    .alert i {
+        font-size: 18px;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 480px) {
+        .login-wrapper {
+            padding: 15px;
         }
 
-        .login-container{
-            width:450px;
+        .logo-icon {
+            font-size: 45px;
         }
 
-        .card{
-            background-color:#1f1f1f;
-            border:1px solid #333;
-            border-radius:15px;
-            box-shadow:0 0 20px rgba(0,0,0,0.5);
+        .logo-title {
+            font-size: 22px;
         }
 
-        .card-header{
-            background-color:#28a745;
-            color:white;
-            text-align:center;
-            font-size:28px;
-            font-weight:bold;
+        .login-card-body {
+            padding: 28px;
         }
 
-        .card-body{
-            padding:30px;
+        .avatar-container {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
         }
 
-        .form-control{
-            background-color:#2b2b2b;
-            border:none;
-            color:white;
+        .btn-login,
+        .btn-admin {
+            padding: 12px;
+            font-size: 14px;
         }
-
-        .form-control:focus{
-            background-color:#2b2b2b;
-            color:white;
-            box-shadow:none;
-            border:1px solid #28a745;
-        }
-
-        .btn-login{
-            width:100%;
-            background-color:#28a745;
-            color:white;
-            font-weight:bold;
-        }
-
-        .btn-login:hover{
-            background-color:#218838;
-            color:white;
-        }
-
-        .voltar{
-            text-align:center;
-            margin-top:15px;
-        }
-
-        .voltar a{
-            color:#28a745;
-            text-decoration:none;
-        }
-
-        .voltar a:hover{
-            color:#34ce57;
-        }
-
-        .logo{
-            text-align:center;
-            margin-bottom:20px;
-            font-size:50px;
-            color:#28a745;
-        }
-
-        .avatar-container{
-    display:flex;
-    justify-content:space-around;
-    gap:15px;
-    margin-top:10px;
-}
-
-.avatar-option{
-    cursor:pointer;
-    text-align:center;
-}
-
-.avatar-option input{
-    display:none;
-}
-
-.avatar-option img{
-    width:80px;
-    height:80px;
-    border-radius:50%;
-    border:3px solid transparent;
-    transition:0.3s;
-}
-
-.avatar-option span{
-    display:block;
-    margin-top:8px;
-    color:white;
-}
-
-.avatar-option input:checked + img{
-    border:3px solid #28a745;
-    transform:scale(1.1);
-}
+    }
     </style>
 
 </head>
 
 <body>
 
-    <div class="login-container">
+    <div class="login-wrapper">
 
-        <div class="logo">
-            <i class="bi bi-code-slash"></i>
+        <!-- Logo e Título -->
+        <div class="logo-section">
+            <div class="logo-icon">
+                <i class="bi bi-code-slash"></i>
+            </div>
+            <h1 class="logo-title">ProgEventos-MG</h1>
+            <p class="logo-subtitle">Maratonas e Olimpíadas de Programação</p>
         </div>
 
-        <div class="card">
+        <!-- Card de Login -->
+        <div class="login-card">
 
-            <div class="card-header">
-                ProgEventos-MG
+            <!-- Header -->
+            <div class="login-card-header">
+                <h2>
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Entrar na Plataforma
+                </h2>
             </div>
 
-            <div class="card-body">
+            <!-- Body -->
+            <div class="login-card-body">
 
-                <form method="POST" enctype="multipart/form-data">
+                {% if erro %}
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <div>{{ erro }}</div>
+                </div>
+                {% endif %}
 
+                <form method="POST">
                     {% csrf_token %}
-                
+
+                    <!-- Nome -->
                     <div class="form-group">
-                        <label>Nome</label>
+                        <label class="form-label">
+                            <i class="bi bi-person-fill"></i>
+                            Usuário
+                        </label>
                         <input type="text"
                                class="form-control"
                                name="nome"
+                               placeholder="Digite seu nome de usuário"
                                required>
                     </div>
-                
+
+                    <!-- Senha -->
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email"
-                               class="form-control"
-                               name="email"
-                               required>
-                    </div>
-                
-                    <div class="form-group">
-                        <label>Senha</label>
+                        <label class="form-label">
+                            <i class="bi bi-lock-fill"></i>
+                            Senha
+                        </label>
                         <input type="password"
                                class="form-control"
                                name="senha"
+                               placeholder="Digite sua senha"
                                required>
                     </div>
-                    
-                    <div class="form-check mb-3">
 
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            id="admin"
-                            name="admin">
-                    
-                        <label class="form-check-label"
-                               for="admin">
-                    
+                    <!-- Checkbox Admin -->
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="admin"
+                               name="admin">
+                        <label class="form-check-label" for="admin">
                             Sou administrador
-                    
                         </label>
-                    
                     </div>
-                
-                    <div class="form-group">
 
-                        <label>Escolha um avatar</label>
-                    
-                        <div class="avatar-container">
-                    
-                            <label class="avatar-option">
-                    
-                                <input
-                                    type="radio"
-                                    name="avatar"
-                                    value="homem"
-                                    checked
-                                >
-                    
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
-                                    alt="Avatar Homem"
-                                >
-                    
-                                <span>Homem</span>
-                    
-                            </label>
-                    
-                            <label class="avatar-option">
-                    
-                                <input
-                                    type="radio"
-                                    name="avatar"
-                                    value="mulher"
-                                >
-                    
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/4140/4140051.png"
-                                    alt="Avatar Mulher"
-                                >
-                    
-                                <span>Mulher</span>
-                    
-                            </label>
-                    
-                            <label class="avatar-option">
-                    
-                                <input
-                                    type="radio"
-                                    name="avatar"
-                                    value="neutro"
-                                >
-                    
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                                    alt="Avatar Neutro"
-                                >
-                    
-                                <span>Neutro</span>
-                    
-                            </label>
-                    
-                        </div>
-                    
+                    <!-- Avatar Selection -->
+                    <label class="avatar-label">
+                        <i class="bi bi-image"></i>
+                        Escolha seu avatar
+                    </label>
+
+                    <div class="avatar-container">
+                        <label class="avatar-option">
+                            <input type="radio"
+                                   name="avatar"
+                                   value="homem"
+                                   checked>
+                            <div class="avatar-option-wrapper">
+                                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
+                                     alt="Avatar Homem">
+                            </div>
+                            <span>Homem</span>
+                        </label>
+
+                        <label class="avatar-option">
+                            <input type="radio"
+                                   name="avatar"
+                                   value="mulher">
+                            <div class="avatar-option-wrapper">
+                                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140051.png"
+                                     alt="Avatar Mulher">
+                            </div>
+                            <span>Mulher</span>
+                        </label>
+
+                        <label class="avatar-option">
+                            <input type="radio"
+                                   name="avatar"
+                                   value="neutro">
+                            <div class="avatar-option-wrapper">
+                                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                                     alt="Avatar Neutro">
+                            </div>
+                            <span>Neutro</span>
+                        </label>
                     </div>
-                
-                    <div class="form-group">
-                
-                        <label>Ou envie uma foto personalizada</label>
-                
-                        <input type="file"
-                               class="form-control"
-                               name="foto"
-                               accept="image/*">
-                
+
+                    <!-- File Upload -->
+                    <div class="file-input-wrapper">
+                        <label class="file-input-label">
+                            <i class="bi bi-cloud-upload"></i>
+                            Ou envie uma foto personalizada
+                            <input type="file"
+                                   name="foto"
+                                   accept="image/*">
+                        </label>
                     </div>
-                
-                    <button type="submit"
-class="btn btn-success btn-block">
 
-Entrar
+                    <!-- Botão Login -->
+                    <button type="submit" class="btn btn-login">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Entrar
+                    </button>
 
-</button>
+                    <!-- Divider -->
+                    <div class="divider-section">
+                        <div class="divider-line"></div>
+                        <div class="divider-text">OU</div>
+                        <div class="divider-line"></div>
+                    </div>
 
-<hr>
+                    <!-- Botão Admin -->
+                    <a href="/admin/login/" class="btn btn-admin">
+                        <i class="bi bi-shield-lock"></i>
+                        Login Administrativo
+                    </a>
 
-<a href="/admin/login/"
-class="btn btn-danger btn-block">
+                </form>
 
-Login Administrativo
-
-</a>
-
-                <div class="voltar">
-                    <a href="/">← Voltar para página inicial</a>
+                <!-- Back Link -->
+                <div class="back-link">
+                    <a href="/">
+                        <i class="bi bi-arrow-left"></i>
+                        Voltar para página inicial
+                    </a>
                 </div>
 
             </div>
@@ -288,6 +562,11 @@ Login Administrativo
         </div>
 
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"></script>
 
 </body>
 

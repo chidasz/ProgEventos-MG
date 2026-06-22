@@ -17,6 +17,9 @@ class Pessoa(models.Model):
 
     universidade = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"{self.user.username if self.user else 'Pessoa'}"
+
 
 # =========================
 # ADMINISTRAÇÃO
@@ -26,7 +29,7 @@ class Administracao(Pessoa):
     nivelAcesso = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"{self.user.username} - Administrador"
+        return f"{self.user.username} - Administrador" if self.user else "Administrador"
 
 
 # =========================
@@ -40,6 +43,9 @@ class Universidade(models.Model):
 
     def __str__(self):
         return self.nome
+    
+    class Meta:
+        verbose_name_plural = "Universidades"
 
 
 # =========================
@@ -56,32 +62,43 @@ class Competicao(models.Model):
     pessoa = models.ForeignKey(
         Pessoa,
         on_delete=models.CASCADE,
-        related_name='competicoes'
+        related_name='competicoes',
+        null=True,
+        blank=True
     )
 
     universidade = models.ForeignKey(
         Universidade,
         on_delete=models.CASCADE,
-        related_name='competicoes'
+        related_name='competicoes',
+        null=True,
+        blank=True
     )
 
     administrador = models.ForeignKey(
         Administracao,
         on_delete=models.CASCADE,
-        related_name='competicoes_gerenciadas'
+        related_name='competicoes_gerenciadas',
+        null=True,
+        blank=True
     )
 
     def __str__(self):
         return self.nome
+    
+    class Meta:
+        verbose_name_plural = "Competições"
+        ordering = ['-data']
 
 
 # =========================
-# RESULTADO
+# RESULTADO (CORRIGIDO - Removido campo colocacao)
 # =========================
 
 class Resultado(models.Model):
     equipe = models.CharField(max_length=100)
-    colocacao = models.IntegerField()
+    # REMOVIDO: colocacao = models.IntegerField()
+    # MANTIDO: apenas pontuacao - colocação será calculada automaticamente
     pontuacao = models.FloatField()
 
     competicao = models.ForeignKey(
@@ -90,8 +107,28 @@ class Resultado(models.Model):
         related_name='resultados'
     )
 
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+
     def __str__(self):
-        return f"{self.equipe} - {self.colocacao}º Lugar"
+        return f"{self.equipe} - {self.pontuacao} pts"
+    
+    @property
+    def colocacao(self):
+        """Calcula a colocação dinamicamente com base na pontuação"""
+        resultados_mesma_competicao = Resultado.objects.filter(
+            competicao=self.competicao
+        ).order_by('-pontuacao').values_list('id', flat=True)
+        
+        try:
+            return list(resultados_mesma_competicao).index(self.id) + 1
+        except ValueError:
+            return None
+    
+    class Meta:
+        verbose_name_plural = "Resultados"
+        ordering = ['-pontuacao']
+        unique_together = ('competicao', 'equipe')
 
 
 # =========================
@@ -110,6 +147,10 @@ class Calendario(models.Model):
 
     def __str__(self):
         return f"{self.dataEvento} - {self.horario}"
+    
+    class Meta:
+        verbose_name_plural = "Calendários"
+        ordering = ['-dataEvento']
 
 
 # =========================
@@ -118,16 +159,22 @@ class Calendario(models.Model):
 
 class Notificacao(models.Model):
     mensagem = models.CharField(max_length=200)
-    dataEnvio = models.DateField()
+    dataEnvio = models.DateField(auto_now_add=True)
 
     pessoa = models.ForeignKey(
         Pessoa,
         on_delete=models.CASCADE,
-        related_name='notificacoes'
+        related_name='notificacoes',
+        null=True,
+        blank=True
     )
 
     def __str__(self):
         return self.mensagem
+    
+    class Meta:
+        verbose_name_plural = "Notificações"
+        ordering = ['-dataEnvio']
 
 
 # =========================
@@ -155,7 +202,10 @@ class Perfil(models.Model):
         null=True
     )
 
-    descricao = models.TextField()
+    descricao = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Perfil de {self.user.username}" if self.user else "Perfil"
 
 
 # =========================
@@ -167,16 +217,25 @@ class Favorito(models.Model):
         User,
         null=True,
         blank=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='favoritos'
     )
 
     competicao = models.ForeignKey(
         Competicao,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='favoritado_por'
     )
 
+    criado_em = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
-        return f"{self.user.username} - {self.competicao.nome}"
+        return f"{self.user.username} - {self.competicao.nome}" if self.user else f"Favorito - {self.competicao.nome}"
+    
+    class Meta:
+        verbose_name_plural = "Favoritos"
+        unique_together = ('user', 'competicao')
+        ordering = ['-criado_em']
 
 
 # =========================
@@ -184,17 +243,14 @@ class Favorito(models.Model):
 # =========================
 
 class Historico(models.Model):
-    ano = models.IntegerField()
+    data = models.DateField()
     equipe = models.CharField(max_length=100)
-    posicao = models.IntegerField()
 
-    pessoa = models.ForeignKey(
-        Pessoa,
-        on_delete=models.CASCADE
-    )
+    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
+    resultado = models.ForeignKey(Resultado, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.equipe} ({self.ano})"
+        return f"{self.equipe} ({self.data}) - {self.resultado.colocacao}º"
 
 
 # =========================
@@ -208,3 +264,6 @@ class Pesquisa(models.Model):
 
     def __str__(self):
         return self.modalidade
+    
+    class Meta:
+        verbose_name_plural = "Pesquisas"

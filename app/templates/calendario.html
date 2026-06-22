@@ -5,48 +5,144 @@
 {% block content %}
 
 <div class="page-header">
-    <h2><i class="bi bi-calendar-event-fill" style="color:#28a745;"></i> Calendário de Competições</h2>
-    <p>Datas e horários dos eventos cadastrados.</p>
+    <h2>
+        <i class="bi bi-calendar-event-fill"></i>
+        Calendário de Competições
+    </h2>
+    <p>Datas e horários de todos os eventos cadastrados</p>
 </div>
 
-<div class="table-container">
-    <table class="table table-dark table-hover align-middle">
-        <thead>
-            <tr>
-                <th>Competição</th>
-                <th>Data</th>
-                <th>Horário</th>
-                <th>Local</th>
-                <th>Organizador</th>
-            </tr>
-        </thead>
-        <tbody>
+{% if calendarios %}
+
+<!-- TIMELINE VIEW -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="timeline-container" style="position: relative; padding: 20px 0;">
             {% for calendario in calendarios %}
-            <tr>
-                <td>
-                    <i class="bi bi-trophy-fill text-warning"></i>
-                    {{ calendario.competicao.nome }}
-                </td>
-                <td>{{ calendario.dataEvento|date:"d/m/Y" }}</td>
-                <td>
-                    <i class="bi bi-clock"></i>
-                    {{ calendario.horario }}
-                </td>
-                <td>{{ calendario.competicao.local }}</td>
-                <td>{{ calendario.competicao.organizador }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5">
-                    <div class="empty-state">
-                        <i class="bi bi-calendar-x"></i>
-                        Nenhum evento no calendário ainda.
+            <div class="data-card" style="margin-bottom: 20px; border-left: 4px solid #28a745;">
+                <div class="row g-0 align-items-center">
+                    <div class="col-md-3">
+                        <div style="text-align: center; padding: 0 20px;">
+                            <div style="background: linear-gradient(135deg, #28a745, #22a844); 
+                                        border-radius: 12px; padding: 20px; color: white;">
+                                <div style="font-size: 24px; font-weight: 800; margin-bottom: 5px;">
+                                    {{ calendario.dataEvento|date:"d" }}
+                                </div>
+                                <div style="font-size: 13px; font-weight: 600; text-transform: uppercase; opacity: 0.9;">
+                                    {{ calendario.dataEvento|date:"M" }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </td>
-            </tr>
+                    <div class="col-md-9" style="padding: 20px;">
+                        <div style="margin-bottom: 12px;">
+                            <h4 style="margin: 0; color: white; font-weight: 700;">
+                                <i class="bi bi-trophy-fill" style="color: #28a745; margin-right: 8px;"></i>
+                                {{ calendario.competicao.nome }}
+                            </h4>
+                            <p style="margin: 6px 0 0; color: #888; font-size: 13px;">
+                                {{ calendario.competicao.descricao|truncatewords:10 }}
+                            </p>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                                <i class="bi bi-clock-fill" style="color: #28a745; font-size: 16px;"></i>
+                                <div>
+                                    <div style="color: #999; font-size: 11px; text-transform: uppercase;">Horário</div>
+                                    <div style="color: white; font-weight: 600;">{{ calendario.horario }}</div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                                <i class="bi bi-geo-alt-fill" style="color: #28a745; font-size: 16px;"></i>
+                                <div>
+                                    <div style="color: #999; font-size: 11px; text-transform: uppercase;">Local</div>
+                                    <div style="color: white; font-weight: 600;">{{ calendario.competicao.local }}</div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                                <i class="bi bi-person-fill" style="color: #28a745; font-size: 16px;"></i>
+                                <div>
+                                    <div style="color: #999; font-size: 11px; text-transform: uppercase;">Organizador</div>
+                                    <div style="color: white; font-weight: 600;">{{ calendario.competicao.organizador }}</div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                                <i class="bi bi-building" style="color: #28a745; font-size: 16px;"></i>
+                                <div>
+                                    <div style="color: #999; font-size: 11px; text-transform: uppercase;">Instituição</div>
+                                    <div style="color: white; font-weight: 600;">{{ calendario.competicao.universidade.sigla }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #2e2e2e;">
+                            <span class="badge badge-success">
+                                <i class="bi bi-calendar-check"></i>
+                                Evento Agendado
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+    </div>
 </div>
+
+<!-- TABLE VIEW -->
+<div style="margin-top: 40px;">
+    <h3 style="margin-bottom: 20px; color: white; font-size: 18px; font-weight: 700;">
+        <i class="bi bi-table"></i> Visualização em Tabela
+    </h3>
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th><i class="bi bi-trophy-fill"></i> Competição</th>
+                        <th><i class="bi bi-calendar-event"></i> Data</th>
+                        <th><i class="bi bi-clock"></i> Horário</th>
+                        <th><i class="bi bi-geo-alt-fill"></i> Local</th>
+                        <th><i class="bi bi-person-fill"></i> Organizador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for calendario in calendarios %}
+                    <tr>
+                        <td style="color: #28a745; font-weight: 600;">
+                            {{ calendario.competicao.nome }}
+                        </td>
+                        <td>
+                            <span class="badge badge-success">
+                                {{ calendario.dataEvento|date:"d/m/Y" }}
+                            </span>
+                        </td>
+                        <td>
+                            <i class="bi bi-clock"></i>
+                            {{ calendario.horario }}
+                        </td>
+                        <td>{{ calendario.competicao.local }}</td>
+                        <td>{{ calendario.competicao.organizador }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div class="empty-state">
+    <i class="bi bi-calendar-x"></i>
+    <h3>Nenhum evento agendado</h3>
+    <p style="color: #666;">Volte mais tarde para acompanhar o calendário de competições</p>
+</div>
+
+{% endif %}
 
 {% endblock %}

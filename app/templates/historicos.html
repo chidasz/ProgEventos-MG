@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}Histórico - ProgEventos-MG{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h2>
+        <i class="bi bi-clock-history"></i>
+        Meu Histórico de Participações
+    </h2>
+    <p>Todas as maratonas e olimpíadas que você participou</p>
+</div>
+
+{% if historicos %}
+
+<!-- TIMELINE -->
+<div class="row">
+    <div class="col-12">
+        <div style="position: relative; padding: 20px 0;">
+            <!-- Vertical line -->
+            <div style="position: absolute; left: 24px; top: 0; bottom: 0; 
+                       width: 2px; background: linear-gradient(180deg, #28a745, transparent);"></div>
+
+            {% for historico in historicos %}
+            <div class="data-card" style="margin-bottom: 24px; margin-left: 70px; position: relative;">
+                
+                <!-- Timeline dot -->
+                <div style="position: absolute; left: -46px; top: 20px; 
+                           width: 40px; height: 40px; background: #28a745; 
+                           border-radius: 50%; border: 4px solid #1f1f1f; 
+                           display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-trophy-fill" style="color: white; font-size: 18px;"></i>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 style="margin: 0 0 8px; color: white; font-weight: 700;">
+                            {{ historico.equipe }}
+                        </h4>
+                        <p style="margin: 0; color: #888; font-size: 13px;">
+                            {{ historico.ano }}
+                        </p>
+                    </div>
+                    <div class="col-md-4" style="text-align: right;">
+                        <div style="background: linear-gradient(135deg, #28a745, #22a844); 
+                                   border-radius: 12px; padding: 16px; color: white; 
+                                   text-align: center; display: inline-block;">
+                            <div style="font-size: 24px; font-weight: 800; margin-bottom: 4px;">
+                                {% if historico.posicao == 1 %}
+                                    🥇
+                                {% elif historico.posicao == 2 %}
+                                    🥈
+                                {% elif historico.posicao == 3 %}
+                                    🥉
+                                {% else %}
+                                    #
+                                {% endif %}
+                            </div>
+                            <div style="font-size: 14px; font-weight: 700;">
+                                {{ historico.posicao }}º lugar
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div style="margin-top: 40px;">
+    <h3 style="color: white; font-size: 18px; font-weight: 700; margin-bottom: 20px;">
+        <i class="bi bi-bar-chart-fill"></i> Suas Estatísticas
+    </h3>
+
+    <div class="row g-3">
+        <div class="col-md-3 col-sm-6">
+            <div class="info-card">
+                <i class="bi bi-trophy-fill"></i>
+                <h3 style="color: #28a745;">{{ historicos|length }}</h3>
+                <p style="margin-bottom: 0;">Participações</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="info-card">
+                <i class="bi bi-lightning-fill"></i>
+                <h3 style="color: #28a745;">
+                    {% load humanize %}
+                    {% firstof "N/A" %}
+                </h3>
+                <p style="margin-bottom: 0;">Melhor Ranking</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="info-card">
+                <i class="bi bi-calendar2-event"></i>
+                <h3 style="color: #28a745;">
+                    {% if historicos|length > 0 %}
+                        {{ historicos|first|dictsort:"ano"|last|first }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </h3>
+                <p style="margin-bottom: 0;">Ano de Registro</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="info-card">
+                <i class="bi bi-star-fill"></i>
+                <h3 style="color: #28a745;">{{ historicos|length }}</h3>
+                <p style="margin-bottom: 0;">Eventos Concluídos</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Table -->
+<div style="margin-top: 40px;">
+    <h3 style="color: white; font-size: 18px; font-weight: 700; margin-bottom: 20px;">
+        <i class="bi bi-table"></i> Visualização Detalhada
+    </h3>
+    
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 80px; text-align: center;">
+                            <i class="bi bi-award-fill"></i> Posição
+                        </th>
+                        <th>
+                            <i class="bi bi-people-fill"></i> Equipe
+                        </th>
+                        <th style="width: 100px; text-align: center;">
+                            <i class="bi bi-calendar3"></i> Ano
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for historico in historicos %}
+                    <tr>
+                        <td style="text-align: center; font-weight: 700; font-size: 16px; color: #28a745;">
+                            {% if historico.posicao == 1 %}
+                                🥇 1º
+                            {% elif historico.posicao == 2 %}
+                                🥈 2º
+                            {% elif historico.posicao == 3 %}
+                                🥉 3º
+                            {% else %}
+                                {{ historico.posicao }}º
+                            {% endif %}
+                        </td>
+                        <td style="color: white; font-weight: 600;">
+                            {{ historico.equipe }}
+                        </td>
+                        <td style="text-align: center; color: #888;">
+                            {{ historico.ano }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div class="empty-state">
+    <i class="bi bi-clock-history"></i>
+    <h3>Seu histórico está vazio</h3>
+    <p style="color: #666; margin-bottom: 20px;">
+        Quando você participar de competições, elas aparecerão aqui
+    </p>
+    <a href="{% url 'competicoes' %}" class="btn btn-success">
+        <i class="bi bi-trophy-fill"></i> Ver Competições
+    </a>
+</div>
+
+{% endif %}
+
+{% endblock %}

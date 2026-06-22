@@ -5,70 +5,167 @@
 {% block content %}
 
 <div class="page-header">
-    <h2><i class="bi bi-trophy-fill" style="color:#28a745;"></i> Competições</h2>
-    <p>Consulte todas as competições cadastradas.</p>
+    <h2>
+        <i class="bi bi-trophy-fill"></i>
+        Competições
+    </h2>
+    <p>Explore todas as maratonas e olimpíadas de programação cadastradas</p>
 </div>
 
-<div class="table-container">
-    <table class="table table-dark table-hover align-middle">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Descrição</th>
-                <th>Data</th>
-                <th>Local</th>
-                <th>Organizador</th>
-                <th>Pessoa</th>
-                <th>Universidade</th>
-                <th>Administrador</th>
-                <th>Editar</th>
-                <th>Excluir</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for competicao in competicoes %}
-            <tr>
-                <td>{{ competicao.nome }}</td>
-                <td>{{ competicao.descricao }}</td>
-                <td>{{ competicao.data|date:"d/m/Y" }}</td>
-                <td>{{ competicao.local }}</td>
-                <td>{{ competicao.organizador }}</td>
-                <td>{{ competicao.pessoa.nome }}</td>
-                <td>{{ competicao.universidade.nome }}</td>
-                <td>{{ competicao.administrador.nome }}</td>
-                <td>
+<!-- View Toggle Buttons -->
+<div class="mb-4 d-flex gap-2">
+    <button class="btn btn-outline-success btn-sm active" id="btnTable" onclick="showTable()">
+        <i class="bi bi-table"></i> Tabela
+    </button>
+    <button class="btn btn-outline-success btn-sm" id="btnCards" onclick="showCards()">
+        <i class="bi bi-collection"></i> Cards
+    </button>
+</div>
+
+<!-- TABLE VIEW -->
+<div id="tableView" class="table-container">
+    {% if competicoes %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>
+                        <i class="bi bi-trophy-fill"></i> Nome
+                    </th>
+                    <th>
+                        <i class="bi bi-calendar-event"></i> Data
+                    </th>
+                    <th>
+                        <i class="bi bi-geo-alt-fill"></i> Local
+                    </th>
+                    <th>
+                        <i class="bi bi-person-fill"></i> Organizador
+                    </th>
+                    <th>
+                        <i class="bi bi-building"></i> Universidade
+                    </th>
+                    <th style="width: 120px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for competicao in competicoes %}
+                <tr>
+                    <td>
+                        <div class="fw-600" style="color: #28a745;">{{ competicao.nome }}</div>
+                        <small style="color: #888;">{{ competicao.descricao|truncatewords:5 }}</small>
+                    </td>
+                    <td>
+                        <span class="badge badge-success">
+                            {{ competicao.data|date:"d/m/Y" }}
+                        </span>
+                    </td>
+                    <td>{{ competicao.local }}</td>
+                    <td>
+                        <small>{{ competicao.organizador }}</small>
+                    </td>
+                    <td>
+                        <small>{{ competicao.universidade.nome }}</small>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'editar_competicao' competicao.id %}"
+                               class="btn btn-editar btn-sm"
+                               title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <button type="button"
+                                    class="btn btn-excluir btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalExcluir"
+                                    data-id="{{ competicao.id }}"
+                                    data-nome="{{ competicao.nome }}"
+                                    title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="bi bi-trophy"></i>
+        <h3>Nenhuma competição cadastrada</h3>
+        <p style="color: #666;">Volte mais tarde para conhecer os eventos</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- CARDS VIEW -->
+<div id="cardsView" class="row g-3" style="display: none;">
+    {% if competicoes %}
+        {% for competicao in competicoes %}
+        <div class="col-md-6 col-lg-4">
+            <div class="data-card h-100">
+                <div class="data-card-header">
+                    <div>
+                        <div class="data-card-title">
+                            <i class="bi bi-trophy-fill" style="color: #28a745; margin-right: 8px;"></i>
+                            {{ competicao.nome }}
+                        </div>
+                        <div class="data-card-subtitle">
+                            {{ competicao.descricao|truncatewords:8 }}
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="border-color: #2e2e2e; margin: 12px 0;">
+
+                <div style="margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px;">
+                        <i class="bi bi-calendar-event" style="color: #28a745;"></i>
+                        <strong>{{ competicao.data|date:"d/m/Y" }}</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px;">
+                        <i class="bi bi-geo-alt-fill" style="color: #28a745;"></i>
+                        {{ competicao.local }}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px;">
+                        <i class="bi bi-person-fill" style="color: #28a745;"></i>
+                        {{ competicao.organizador }}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                        <i class="bi bi-building" style="color: #28a745;"></i>
+                        {{ competicao.universidade.nome }}
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
                     <a href="{% url 'editar_competicao' competicao.id %}"
-                       class="btn btn-editar btn-sm">
-                        <i class="bi bi-pencil-square"></i>
+                       class="btn btn-editar btn-sm w-50">
+                        <i class="bi bi-pencil-square"></i> Editar
                     </a>
-                </td>
-                <td>
-                    <!-- CORRIGIDO: abre modal de confirmação, deleta via POST -->
                     <button type="button"
-                            class="btn btn-excluir btn-sm"
+                            class="btn btn-excluir btn-sm w-50"
                             data-bs-toggle="modal"
                             data-bs-target="#modalExcluir"
                             data-id="{{ competicao.id }}"
                             data-nome="{{ competicao.nome }}">
-                        <i class="bi bi-trash"></i>
+                        <i class="bi bi-trash"></i> Excluir
                     </button>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="10">
-                    <div class="empty-state">
-                        <i class="bi bi-trophy"></i>
-                        Nenhuma competição cadastrada.
-                    </div>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="col-12">
+        <div class="empty-state">
+            <i class="bi bi-trophy"></i>
+            <h3>Nenhuma competição cadastrada</h3>
+            <p style="color: #666;">Volte mais tarde para conhecer os eventos</p>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
-<!-- Modal de confirmação -->
+<!-- Modal de confirmação de exclusão -->
 <div class="modal fade" id="modalExcluir" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -80,17 +177,19 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                Tem certeza que deseja excluir a competição
-                <strong id="nomeCompeticao"></strong>?
-                Esta ação não pode ser desfeita.
+                <p>Tem certeza que deseja excluir a competição:</p>
+                <p style="color: #28a745; font-weight: 600; font-size: 16px;" id="nomeCompeticao"></p>
+                <p style="color: #888; font-size: 13px;">Esta ação não pode ser desfeita.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary"
-                        data-bs-dismiss="modal">Cancelar</button>
-                <form id="formExcluir" method="POST" action="">
+                        data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </button>
+                <form id="formExcluir" method="POST" action="" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-excluir">
-                        <i class="bi bi-trash"></i> Excluir
+                        <i class="bi bi-trash"></i> Excluir Definitivamente
                     </button>
                 </form>
             </div>
@@ -102,10 +201,25 @@
 
 {% block extra_scripts %}
 <script>
-// Bootstrap 5: vanilla JS, sem jQuery
+// Toggle entre views
+function showTable() {
+    document.getElementById('tableView').style.display = 'block';
+    document.getElementById('cardsView').style.display = 'none';
+    document.getElementById('btnTable').classList.add('active');
+    document.getElementById('btnCards').classList.remove('active');
+}
+
+function showCards() {
+    document.getElementById('tableView').style.display = 'none';
+    document.getElementById('cardsView').style.display = 'grid';
+    document.getElementById('btnTable').classList.remove('active');
+    document.getElementById('btnCards').classList.add('active');
+}
+
+// Modal handler
 document.getElementById('modalExcluir').addEventListener('show.bs.modal', function(event) {
-    var btn  = event.relatedTarget;
-    var id   = btn.getAttribute('data-id');
+    var btn = event.relatedTarget;
+    var id = btn.getAttribute('data-id');
     var nome = btn.getAttribute('data-nome');
     document.getElementById('nomeCompeticao').textContent = '"' + nome + '"';
     document.getElementById('formExcluir').setAttribute('action', '/competicao/delete/' + id + '/');

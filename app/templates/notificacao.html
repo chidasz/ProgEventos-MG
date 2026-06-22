@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Notificações - ProgEventos-MG{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h2>
+        <i class="bi bi-bell-fill"></i>
+        Notificações
+    </h2>
+    <p>Fique atualizado com as novidades da plataforma</p>
+</div>
+
+{% if notificacoes %}
+
+<div style="max-width: 600px; margin: 0 auto;">
+    {% for notificacao in notificacoes %}
+    <div class="data-card" style="border-left: 4px solid #28a745; margin-bottom: 16px;">
+        <div style="display: flex; gap: 16px; align-items: flex-start;">
+            
+            <!-- Icon -->
+            <div style="background: rgba(40, 167, 69, 0.15); 
+                       border-radius: 10px; padding: 12px; 
+                       min-width: 44px; text-align: center; color: #28a745; font-size: 20px;">
+                <i class="bi bi-bell-fill"></i>
+            </div>
+
+            <!-- Content -->
+            <div style="flex: 1;">
+                <h4 style="margin: 0 0 8px; color: white; font-weight: 700;">
+                    Notificação
+                </h4>
+                <p style="margin: 0 0 12px; color: #ccc; font-size: 14px;">
+                    {{ notificacao.mensagem }}
+                </p>
+                <div style="display: flex; align-items: center; gap: 8px; 
+                           color: #888; font-size: 12px;">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>
+                        {% load humanize %}
+                        {{ notificacao.dataEnvio|date:"d/m/Y à\s H:i" }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <button type="button" 
+                   class="btn btn-sm" 
+                   style="background: rgba(220, 53, 69, 0.2); color: #ff6b6b; 
+                          border: none; border-radius: 6px; padding: 6px 10px;">
+                <i class="bi bi-x-circle"></i>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Stats -->
+<div style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+    <div class="row g-3">
+        <div class="col-6">
+            <div class="info-card">
+                <i class="bi bi-bell-fill"></i>
+                <h3 style="color: #28a745;">{{ notificacoes|length }}</h3>
+                <p style="margin-bottom: 0; font-size: 12px;">Notificações</p>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="info-card">
+                <i class="bi bi-check-circle-fill"></i>
+                <h3 style="color: #28a745;">0</h3>
+                <p style="margin-bottom: 0; font-size: 12px;">Não lidas</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div class="empty-state">
+    <i class="bi bi-bell"></i>
+    <h3>Você está em dia</h3>
+    <p style="color: #666; margin-bottom: 20px;">
+        Nenhuma notificação por enquanto. Você será notificado quando houver novidades importantes
+    </p>
+    <a href="{% url 'competicoes' %}" class="btn btn-success">
+        <i class="bi bi-trophy-fill"></i> Explorar Competições
+    </a>
+</div>
+
+{% endif %}
+
+<!-- Notification Settings -->
+<div style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+    <div class="card-container">
+        <h3 style="margin-top: 0; color: white; font-weight: 700;">
+            <i class="bi bi-gear-fill"></i> Preferências de Notificação
+        </h3>
+        <hr style="border-color: #2e2e2e;">
+        
+        <div class="form-check" style="margin-bottom: 16px;">
+            <input class="form-check-input" type="checkbox" id="notif-competicoes" checked>
+            <label class="form-check-label" for="notif-competicoes">
+                <strong>Novas competições</strong>
+                <p style="margin: 4px 0 0 26px; color: #888; font-size: 13px;">
+                    Receber notificação quando uma nova competição for cadastrada
+                </p>
+            </label>
+        </div>
+
+        <div class="form-check" style="margin-bottom: 16px;">
+            <input class="form-check-input" type="checkbox" id="notif-resultados" checked>
+            <label class="form-check-label" for="notif-resultados">
+                <strong>Resultados publicados</strong>
+                <p style="margin: 4px 0 0 26px; color: #888; font-size: 13px;">
+                    Receber notificação quando os resultados de competições forem disponibilizados
+                </p>
+            </label>
+        </div>
+
+        <div class="form-check" style="margin-bottom: 16px;">
+            <input class="form-check-input" type="checkbox" id="notif-favoritos" checked>
+            <label class="form-check-label" for="notif-favoritos">
+                <strong>Favoritos próximos</strong>
+                <p style="margin: 4px 0 0 26px; color: #888; font-size: 13px;">
+                    Receber lembrete dos eventos favoritos que estão se aproximando
+                </p>
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="notif-updates" checked>
+            <label class="form-check-label" for="notif-updates">
+                <strong>Atualizações da plataforma</strong>
+                <p style="margin: 4px 0 0 26px; color: #888; font-size: 13px;">
+                    Receber informações sobre novas funcionalidades e melhorias
+                </p>
+            </label>
+        </div>
+
+        <hr style="border-color: #2e2e2e; margin-top: 20px;">
+        <button type="button" class="btn btn-success" style="width: 100%;">
+            <i class="bi bi-check-circle"></i> Salvar Preferências
+        </button>
+    </div>
+</div>
+
+{% endblock %}

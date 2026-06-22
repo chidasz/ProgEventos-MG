@@ -1,156 +1,188 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends 'base.html' %}
 
-<head>
+{% block title %}Editar Competição - ProgEventos-MG{% endblock %}
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block content %}
 
-<title>Editar Competição</title>
+<div class="page-header">
+    <h2>
+        <i class="bi bi-pencil-square"></i>
+        Editar Competição
+    </h2>
+    <p>Atualize as informações da competição</p>
+</div>
 
-<link rel="stylesheet"
-href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<div style="max-width: 700px; margin: 0 auto;">
+    <div class="card-container">
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
 
+            <!-- Nome -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="bi bi-trophy-fill"></i>
+                    Nome da Competição *
+                </label>
+                {{ form.nome }}
+                {% if form.nome.errors %}
+                    <div class="text-danger small mt-2">
+                        {{ form.nome.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Descrição -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="bi bi-card-text"></i>
+                    Descrição *
+                </label>
+                {{ form.descricao }}
+                {% if form.descricao.errors %}
+                    <div class="text-danger small mt-2">
+                        {{ form.descricao.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Data -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="bi bi-calendar-event"></i>
+                    Data *
+                </label>
+                {{ form.data }}
+                {% if form.data.errors %}
+                    <div class="text-danger small mt-2">
+                        {{ form.data.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Local -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    Local *
+                </label>
+                {{ form.local }}
+                {% if form.local.errors %}
+                    <div class="text-danger small mt-2">
+                        {{ form.local.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Organizador -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="bi bi-person-fill"></i>
+                    Organizador *
+                </label>
+                {{ form.organizador }}
+                {% if form.organizador.errors %}
+                    <div class="text-danger small mt-2">
+                        {{ form.organizador.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Pessoa -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="bi bi-person-circle"></i>
+                    Pessoa Responsável *
+                </label>
+                {{ form.pessoa }}
+                {% if form.pessoa.errors %}
+                    <div class="text-danger small mt-2">
+                        {{ form.pessoa.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Universidade -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="bi bi-building"></i>
+                    Universidade *
+                </label>
+                {{ form.universidade }}
+                {% if form.universidade.errors %}
+                    <div class="text-danger small mt-2">
+                        {{ form.universidade.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Administrador -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="bi bi-shield-lock"></i>
+                    Administrador *
+                </label>
+                {{ form.administrador }}
+                {% if form.administrador.errors %}
+                    <div class="text-danger small mt-2">
+                        {{ form.administrador.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Buttons -->
+            <div style="display: flex; gap: 12px; margin-top: 28px;">
+                <button type="submit" class="btn btn-success" style="flex: 1;">
+                    <i class="bi bi-check-circle"></i> Salvar Alterações
+                </button>
+                <a href="{% url 'competicoes' %}" class="btn btn-outline-secondary" style="flex: 1;">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
+            </div>
+
+        </form>
+
+        <!-- Warning -->
+        <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3);
+                   border-radius: 8px; padding: 16px; margin-top: 24px; color: #FFD700;">
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+                <i class="bi bi-exclamation-triangle-fill" style="margin-top: 2px;"></i>
+                <div>
+                    <strong>Atenção:</strong>
+                    <p style="margin: 8px 0 0; font-size: 13px;">
+                        Certifique-se de que todas as informações estão corretas antes de salvar.
+                        Alterações em competições afetarão os participantes.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Additional Help -->
+<div style="max-width: 700px; margin: 40px auto 0;">
+    <div class="card-container">
+        <h4 style="margin-top: 0; color: white; font-weight: 700;">
+            <i class="bi bi-info-circle-fill"></i> Dicas de Preenchimento
+        </h4>
+        <ul style="margin: 0; padding-left: 20px; color: #ccc; font-size: 13px;">
+            <li>Use um <strong>nome descritivo</strong> para a competição</li>
+            <li>Forneça uma <strong>descrição clara</strong> sobre o evento</li>
+            <li>Escolha a <strong>data correta</strong> do evento</li>
+            <li>Indique o <strong>local preciso</strong> onde ocorrerá</li>
+            <li>Identifique corretamente o <strong>organizador</strong></li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_styles %}
 <style>
-
-body{
-    background:#121212;
-    color:white;
-}
-
-.container{
-    margin-top:50px;
-    max-width:700px;
-}
-
-.card{
-    background:#1f1f1f;
-    border:1px solid #333;
-}
-
-.card-header{
-    background:#28a745;
-    font-size:24px;
-    text-align:center;
-    color:white;
-}
-
-label{
-    font-weight:bold;
-}
-
-input,
-textarea,
-select{
-    background:#2b2b2b !important;
-    color:white !important;
-    border:1px solid #444 !important;
-}
-
-.btn-success{
-    width:100%;
-}
-
-.btn-secondary{
-    width:100%;
-    margin-top:10px;
-}
-
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
 </style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="card">
-
-<div class="card-header">
-
-Editar Competição
-
-</div>
-
-<div class="card-body">
-
-<form method="POST">
-
-{% csrf_token %}
-
-<div class="form-group">
-
-<label>Nome</label>
-
-{{ form.nome }}
-
-</div>
-
-<div class="form-group">
-
-<label>Descrição</label>
-
-{{ form.descricao }}
-
-</div>
-
-<div class="form-group">
-
-<label>Data</label>
-
-{{ form.data }}
-
-</div>
-
-<div class="form-group">
-
-<label>Local</label>
-
-{{ form.local }}
-
-</div>
-
-<div class="form-group">
-
-<label>Organizador</label>
-
-{{ form.organizador }}
-
-</div>
-
-<div class="form-group">
-
-<label>Pessoa</label>
-
-{{ form.pessoa }}
-
-</div>
-
-<div class="form-group">
-
-<label>Universidade</label>
-
-{{ form.universidade }}
-
-</div>
-
-
-<button type="submit" class="btn btn-success">
-Salvar Alterações
-</button>
-
-<a href="/competicoes/" class="btn btn-secondary">
-Cancelar
-</a>
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-</body>
-
-</html>
+{% endblock %}

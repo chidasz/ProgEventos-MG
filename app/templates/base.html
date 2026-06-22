@@ -17,110 +17,575 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
+:root {
+    --primary-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --dark-bg: #121212;
+    --dark-secondary: #181818;
+    --dark-tertiary: #1f1f1f;
+    --border-color: #2e2e2e;
+    --text-light: #ccc;
+    --text-muted: #888;
+    --text-subtle: #555;
+}
+
+* {
+    scroll-behavior: smooth;
+}
+
 body {
-    background: #121212;
+    background: var(--dark-bg);
     color: white;
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.3px;
 }
+
+/* ==================== SIDEBAR ==================== */
 .sidebar {
     position: fixed;
-    left: 0; top: 0;
+    left: 0;
+    top: 0;
     width: 250px;
     height: 100vh;
-    background: #181818;
+    background: linear-gradient(180deg, var(--dark-secondary) 0%, #161616 100%);
     padding: 25px 15px;
-    box-shadow: 3px 0 15px rgba(0,0,0,.4);
+    box-shadow: 3px 0 15px rgba(0,0,0,.5);
     overflow-y: auto;
+    z-index: 1000;
 }
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--dark-tertiary);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
 .sidebar h3 {
-    color: #28a745;
+    color: var(--primary-color);
     text-align: center;
     margin-bottom: 30px;
     font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
+
 .sidebar a {
-    display: block;
+    display: flex;
+    align-items: center;
     padding: 11px 14px;
     margin-bottom: 4px;
-    color: #ccc;
+    color: var(--text-light);
     text-decoration: none;
     border-radius: 8px;
-    transition: .2s;
+    transition: all 0.2s ease;
     font-size: 14px;
+    font-weight: 500;
 }
-.sidebar a:hover, .sidebar a.active {
-    background: #28a745;
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: var(--primary-color);
     color: white;
+    transform: translateX(4px);
 }
-.sidebar i { margin-right: 8px; }
+
+.sidebar a i {
+    margin-right: 8px;
+    width: 18px;
+    text-align: center;
+}
+
 .sidebar .divider {
-    border-top: 1px solid #2e2e2e;
+    border-top: 1px solid var(--border-color);
     margin: 12px 0;
+    opacity: 0.5;
 }
+
 .sidebar .btn-sair {
-    color: #dc3545 !important;
+    color: var(--danger-color) !important;
+    margin-top: 8px;
 }
+
 .sidebar .btn-sair:hover {
-    background: #dc3545 !important;
+    background: var(--danger-color) !important;
     color: white !important;
 }
+
+/* ==================== CONTENT ==================== */
 .content {
     margin-left: 265px;
     padding: 30px;
+    min-height: 100vh;
 }
+
+/* ==================== PAGE HEADER ==================== */
 .page-header {
-    background: #1f1f1f;
-    border: 1px solid #2e2e2e;
+    background: var(--dark-tertiary);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 22px 25px;
     margin-bottom: 25px;
+    animation: slideIn 0.3s ease;
 }
-.page-header h2 { margin: 0; font-size: 22px; }
-.page-header p  { margin: 6px 0 0; color: #888; font-size: 14px; }
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-header h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.page-header p {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* ==================== CARDS & CONTAINERS ==================== */
+.card-container,
 .table-container {
-    background: #1f1f1f;
-    border: 1px solid #2e2e2e;
+    background: var(--dark-tertiary);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 20px;
+    transition: all 0.3s ease;
 }
-.table { color: white; }
-.table thead { background: #28a745; }
-.table thead th { border: none; color: white; }
-.table-dark { --bs-table-bg: transparent; }
+
+.card-container:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 5px 20px rgba(40, 167, 69, 0.1);
+}
+
+/* ==================== INFO CARDS ==================== */
+.info-card {
+    background: linear-gradient(135deg, var(--dark-tertiary) 0%, #262626 100%);
+    border: 1px solid rgba(40, 167, 69, 0.1);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.info-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary-color);
+    box-shadow: 0 12px 35px rgba(40, 167, 69, 0.25);
+    background: linear-gradient(135deg, #262626 0%, var(--dark-tertiary) 100%);
+}
+
+.info-card i {
+    font-size: 50px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.info-card:hover i {
+    transform: scale(1.15);
+}
+
+.info-card h2 {
+    margin-top: 16px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.info-card h3 {
+    color: var(--primary-color);
+    font-size: 28px;
+    font-weight: 800;
+    margin: 8px 0;
+}
+
+.info-card p {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin: 0;
+}
+
+/* ==================== DATA CARDS ==================== */
+.data-card {
+    background: var(--dark-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    margin-bottom: 16px;
+}
+
+.data-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.15);
+}
+
+.data-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.data-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+}
+
+.data-card-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* ==================== TABLES ==================== */
+.table {
+    color: white;
+    border-color: var(--border-color);
+}
+
+.table thead {
+    background: linear-gradient(90deg, var(--primary-color) 0%, #22a844 100%);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+.table thead th {
+    border: none;
+    color: white;
+    padding: 16px 12px;
+    vertical-align: middle;
+}
+
+.table tbody td {
+    padding: 14px 12px;
+    border-color: var(--border-color);
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(40, 167, 69, 0.05);
+}
+
+.table-dark {
+    --bs-table-bg: transparent;
+}
+
+/* ==================== BUTTONS ==================== */
 .btn-editar {
-    background: #ffc107; color: #000; border: none;
+    background: var(--warning-color);
+    color: #000;
+    border: none;
+    transition: all 0.2s ease;
+    font-weight: 600;
 }
-.btn-editar:hover { background: #e0a800; color: #000; }
+
+.btn-editar:hover {
+    background: #e0a800;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
 .btn-excluir {
-    background: #dc3545; color: white; border: none;
+    background: var(--danger-color);
+    color: white;
+    border: none;
+    transition: all 0.2s ease;
+    font-weight: 600;
 }
-.btn-excluir:hover { background: #c82333; color: white; }
+
+.btn-excluir:hover {
+    background: #c82333;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-success {
+    background: var(--primary-color);
+    border: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-success:hover {
+    background: #22a844;
+    transform: translateY(-2px);
+}
+
+.btn {
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+}
+
+/* ==================== FORMS ==================== */
+.form-control,
+.form-select {
+    background-color: #2b2b2b;
+    border: 1px solid var(--border-color);
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: #2b2b2b;
+    color: white;
+    box-shadow: none;
+    border: 2px solid var(--primary-color);
+}
+
+.form-control::placeholder {
+    color: var(--text-subtle);
+}
+
+.form-label {
+    color: var(--text-light);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+/* ==================== EMPTY STATE ==================== */
 .empty-state {
     text-align: center;
     padding: 50px 20px;
-    color: #555;
+    color: var(--text-muted);
 }
+
 .empty-state i {
     font-size: 55px;
     display: block;
     margin-bottom: 12px;
+    opacity: 0.6;
 }
+
+.empty-state h3 {
+    color: var(--text-light);
+    margin-top: 15px;
+}
+
+/* ==================== BADGES & TAGS ==================== */
+.badge {
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.badge-success {
+    background: rgba(40, 167, 69, 0.2);
+    color: var(--primary-color);
+}
+
+.badge-warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: var(--warning-color);
+}
+
+.badge-danger {
+    background: rgba(220, 53, 69, 0.2);
+    color: var(--danger-color);
+}
+
+/* ==================== MODAL ==================== */
+.modal-content {
+    background: var(--dark-tertiary);
+    color: white;
+    border: 1px solid var(--border-color);
+}
+
+.modal-header {
+    border-color: var(--border-color);
+    background: rgba(40, 167, 69, 0.05);
+}
+
+.modal-header h5 {
+    font-weight: 600;
+}
+
+.modal-footer {
+    border-color: var(--border-color);
+}
+
+.btn-close {
+    filter: invert(1);
+    opacity: 0.7;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+/* ==================== FOOTER ==================== */
 footer {
     text-align: center;
-    color: #555;
+    color: var(--text-subtle);
     margin-top: 50px;
     margin-bottom: 20px;
     font-size: 13px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 25px;
 }
-/* Modal escuro */
-.modal-content {
-    background: #1f1f1f;
-    color: white;
-    border: 1px solid #333;
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
-.modal-header, .modal-footer { border-color: #333; }
-.btn-close { filter: invert(1); }
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+.slide-in-up {
+    animation: slideInUp 0.3s ease;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 80px;
+        padding: 20px 10px;
+    }
+
+    .sidebar h3 {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .sidebar a {
+        justify-content: center;
+        padding: 10px;
+        margin-bottom: 8px;
+    }
+
+    .sidebar a span {
+        display: none;
+    }
+
+    .sidebar i {
+        margin-right: 0;
+    }
+
+    .content {
+        margin-left: 95px;
+        padding: 20px;
+    }
+
+    .page-header {
+        padding: 16px 20px;
+    }
+
+    .page-header h2 {
+        font-size: 18px;
+    }
+
+    .info-card {
+        padding: 20px;
+    }
+
+    .info-card i {
+        font-size: 35px;
+    }
+
+    .info-card h3 {
+        font-size: 22px;
+    }
+
+    .table {
+        font-size: 12px;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding: 10px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 70px;
+    }
+
+    .content {
+        margin-left: 85px;
+        padding: 15px;
+    }
+
+    .page-header h2 {
+        font-size: 16px;
+    }
+
+    .page-header p {
+        display: none;
+    }
+
+    .info-card {
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+
+    .btn-sm {
+        padding: 0.4rem 0.6rem;
+        font-size: 11px;
+    }
+}
+
 {% block extra_styles %}{% endblock %}
 </style>
 </head>
@@ -128,28 +593,28 @@ footer {
 <body>
 
 <div class="sidebar">
-    <h3><i class="bi bi-code-slash"></i>ProgEventos-MG</h3>
+    <h3><i class="bi bi-code-slash"></i>Prog</h3>
 
-    <a href="{% url 'index' %}"><i class="bi bi-house-fill"></i>Início</a>
-    <a href="{% url 'competicoes' %}"><i class="bi bi-trophy-fill"></i>Competições</a>
-    <a href="{% url 'universidades' %}"><i class="bi bi-building"></i>Universidades</a>
-    <a href="{% url 'calendarios' %}"><i class="bi bi-calendar-event-fill"></i>Calendário</a>
-    <a href="{% url 'resultados' %}"><i class="bi bi-award-fill"></i>Resultados</a>
-    <a href="{% url 'favoritos' %}"><i class="bi bi-heart-fill"></i>Favoritos</a>
-    <a href="{% url 'historicos' %}"><i class="bi bi-clock-history"></i>Histórico</a>
-    <a href="{% url 'notificacoes' %}"><i class="bi bi-bell-fill"></i>Notificações</a>
-    <a href="{% url 'pesquisa' %}"><i class="bi bi-search"></i>Pesquisa</a>
-    <a href="{% url 'perfil' %}"><i class="bi bi-person-circle"></i>Perfil</a>
+    <a href="{% url 'index' %}"><i class="bi bi-house-fill"></i><span>Início</span></a>
+    <a href="{% url 'competicoes' %}"><i class="bi bi-trophy-fill"></i><span>Competições</span></a>
+    <a href="{% url 'universidades' %}"><i class="bi bi-building"></i><span>Universidades</span></a>
+    <a href="{% url 'calendarios' %}"><i class="bi bi-calendar-event-fill"></i><span>Calendário</span></a>
+    <a href="{% url 'resultados' %}"><i class="bi bi-award-fill"></i><span>Resultados</span></a>
+    <a href="{% url 'favoritos' %}"><i class="bi bi-heart-fill"></i><span>Favoritos</span></a>
+    <a href="{% url 'historicos' %}"><i class="bi bi-clock-history"></i><span>Histórico</span></a>
+    <a href="{% url 'notificacoes' %}"><i class="bi bi-bell-fill"></i><span>Notificações</span></a>
+    <a href="{% url 'pesquisa' %}"><i class="bi bi-search"></i><span>Pesquisa</span></a>
+    <a href="{% url 'perfil' %}"><i class="bi bi-person-circle"></i><span>Perfil</span></a>
 
     <div class="divider"></div>
 
     {% if request.user.is_authenticated %}
         <a href="{% url 'logout' %}" class="btn-sair">
-            <i class="bi bi-box-arrow-right"></i>Sair ({{ request.user.username }})
+            <i class="bi bi-box-arrow-right"></i><span>Sair</span>
         </a>
     {% else %}
         <a href="{% url 'login' %}">
-            <i class="bi bi-box-arrow-in-right"></i>Login
+            <i class="bi bi-box-arrow-in-right"></i><span>Login</span>
         </a>
     {% endif %}
 </div>
@@ -158,7 +623,7 @@ footer {
     {% block content %}{% endblock %}
 
     <footer>
-        <hr style="border-color:#2e2e2e;">
+        <hr style="border-color: var(--border-color);">
         <p><i class="bi bi-code-slash"></i> ProgEventos-MG © 2026 &nbsp;·&nbsp; Python · Django · Bootstrap 5</p>
     </footer>
 </div>

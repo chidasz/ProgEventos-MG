@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Favoritos - ProgEventos-MG{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h2>
+        <i class="bi bi-heart-fill"></i>
+        Minhas Competições Favoritas
+    </h2>
+    <p>Competições que você salvou para acompanhar depois</p>
+</div>
+
+{% if favoritos %}
+
+<div class="row g-3">
+    {% for favorito in favoritos %}
+    {% if favorito.competicao %}
+    <div class="col-md-6 col-lg-4">
+        <div class="data-card h-100" style="border-left: 4px solid #28a745; position: relative;">
+            
+            <!-- Remove from favorites button -->
+            <button type="button" 
+                    class="btn btn-sm" 
+                    style="position: absolute; top: 12px; right: 12px; 
+                           background: rgba(220, 53, 69, 0.2); color: #ff6b6b; 
+                           border: none; border-radius: 6px; padding: 6px 10px;"
+                    title="Remover dos favoritos">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+
+            <div class="data-card-header">
+                <div>
+                    <div class="data-card-title">
+                        <i class="bi bi-trophy-fill" style="color: #28a745; margin-right: 8px;"></i>
+                        {{ favorito.competicao.nome }}
+                    </div>
+                    <div class="data-card-subtitle">
+                        {{ favorito.competicao.descricao|truncatewords:8 }}
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border-color: #2e2e2e; margin: 12px 0;">
+
+            <div style="margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px;">
+                    <i class="bi bi-calendar-event" style="color: #28a745;"></i>
+                    <strong>{{ favorito.competicao.data|date:"d/m/Y" }}</strong>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px;">
+                    <i class="bi bi-clock-fill" style="color: #28a745;"></i>
+                    {% if favorito.competicao.calendario %}
+                        {{ favorito.competicao.calendario.horario }}
+                    {% else %}
+                        <em style="color: #666;">Horário não informado</em>
+                    {% endif %}
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px;">
+                    <i class="bi bi-geo-alt-fill" style="color: #28a745;"></i>
+                    {{ favorito.competicao.local }}
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+                    <i class="bi bi-building" style="color: #28a745;"></i>
+                    {{ favorito.competicao.universidade.nome }}
+                </div>
+            </div>
+
+            <div style="background: rgba(40, 167, 69, 0.05); border-radius: 8px; 
+                        padding: 12px; margin-bottom: 16px; border-left: 3px solid #28a745;">
+                <div style="font-size: 12px; color: #999; text-transform: uppercase; 
+                           margin-bottom: 4px; font-weight: 600;">
+                    Organizador
+                </div>
+                <div style="color: white; font-weight: 600;">
+                    {{ favorito.competicao.organizador }}
+                </div>
+            </div>
+
+            <a href="{% url 'competicoes' %}" class="btn btn-success btn-sm w-100">
+                <i class="bi bi-arrow-right"></i> Ver Detalhes
+            </a>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% else %}
+
+<div class="empty-state">
+    <i class="bi bi-heart"></i>
+    <h3>Você ainda não tem favoritos</h3>
+    <p style="color: #666; margin-bottom: 20px;">
+        Clique no ícone de coração nas competições para salvá-las aqui
+    </p>
+    <a href="{% url 'competicoes' %}" class="btn btn-success">
+        <i class="bi bi-trophy-fill"></i> Explorar Competições
+    </a>
+</div>
+
+{% endif %}
+
+{% endblock %}
