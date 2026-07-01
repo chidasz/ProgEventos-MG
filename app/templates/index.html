@@ -1,207 +1,34 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends 'base.html' %}
 
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ProgEventos-MG</title>
-
-<!-- Bootstrap 5.3.8 -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-      crossorigin="anonymous">
-
-<!-- Bootstrap Icons -->
-<link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+{% block title %}
+Início - ProgEventos-MG
+{% endblock %}
+{% block extra_styles %}
 <style>
-body {
-    background: #121212;
-    color: white;
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-}
-.sidebar {
-    position: fixed;
-    left: 0; top: 0;
-    width: 250px;
-    height: 100vh;
-    background: #181818;
-    padding: 25px 15px;
-    box-shadow: 3px 0px 15px rgba(0,0,0,.4);
-    overflow-y: auto;
-}
-.sidebar h3 {
-    color: #28a745;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 18px;
-}
-.sidebar a {
-    display: block;
-    padding: 11px 14px;
-    margin-bottom: 4px;
-    color: #ccc;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: .2s;
-    font-size: 14px;
-}
-.sidebar a:hover { background: #28a745; color: white; }
-.sidebar i { margin-right: 8px; }
-.sidebar .divider {
-    border-top: 1px solid #2e2e2e;
-    margin: 12px 0;
-}
-.sidebar .btn-sair { color: #dc3545 !important; }
-.sidebar .btn-sair:hover { background: #dc3545 !important; color: white !important; }
-.content {
-    margin-left: 265px;
-    padding: 30px;
-}
-.topbar {
-    background: #1f1f1f;
-    border-radius: 12px;
-    padding: 18px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 28px;
-    gap: 15px;
-}
-.search-box {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    background: #2b2b2b;
-    border-radius: 30px;
-    padding: 10px 18px;
-}
-.search-box i {
-    color: #28a745;
-    font-size: 20px;
-    margin-right: 12px;
-}
-.search-box input {
-    width: 100%;
-    border: none;
-    outline: none;
-    background: none;
-    color: white;
-    font-size: 14px;
-}
-.search-box input::placeholder { color: #666; }
-
-/* CORRIGIDO: botão de perfil funcional */
-.user-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: #28a745;
-    transition: .2s;
-    min-width: 60px;
-}
-.user-btn:hover { color: #34ce57; }
-.user-btn i { font-size: 34px; }
-.user-btn .user-name {
-    font-size: 11px;
-    color: #aaa;
-    margin-top: 2px;
-    text-align: center;
-    max-width: 70px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.carousel {
-    background: #1f1f1f;
-    border-radius: 15px;
-    height: 420px;
-    display: flex;
-    align-items: center;
-}
-.carousel-item { padding-top: 40px; }
-.carousel-item h2 { font-size: 38px; margin-top: 20px; }
-.carousel-item p { width: 65%; margin: auto; font-size: 18px; color: #bbb; }
-.carousel-control-prev,
-.carousel-control-next { opacity: 1; }
-.cards { margin-top: 45px; }
-.info-card{
-    background: linear-gradient(
-        145deg,
-        #1f1f1f
-    );
-
-        
-    border-radius:18px;
-    padding:28px;
-    text-align:center;
-
-    transition:.3s;
-}
-
-.info-card:hover{
-    transform:translateY(-6px);
-    box-shadow:0 10px 25px rgba(34,197,94,.25);
-    border-color:#22c55e;
-}
-.info-card i { font-size: 50px; color: #28a745; }
-.info-card h2 { margin-top: 16px; font-size: 18px; }
-.info-card h3 { color: #28a745; font-size: 28px; font-weight: bold; }
-.sobre {
-    margin-top: 45px;
-    background: #1f1f1f;
-    padding: 30px;
-    border-radius: 15px;
-    border: 1px solid #2e2e2e;
-}
-footer {
-    text-align: center;
-    color: #555;
-    margin-top: 50px;
-    margin-bottom: 25px;
-    font-size: 13px;
-}
 
 .hero-integrada{
     background: linear-gradient(
         135deg,
-        #1f1f1f
-        
+        var(--dark-secondary)
     );
 
     border:1px solid rgba(34,197,94,.25);
-
     border-radius:24px;
-
     padding:50px;
-
     margin-bottom:40px;
-
     position:relative;
-
     overflow:hidden;
 }
 
 .hero-integrada::before{
     content:'';
-
     position:absolute;
-
     width:400px;
     height:400px;
-
-    background:#1f1f1f;
-
+    background:rgba(34,197,94,.05);
     border-radius:50%;
-
     top:-150px;
     right:-150px;
-
     filter:blur(80px);
 }
 
@@ -212,119 +39,131 @@ footer {
 }
 
 .hero-text{
-    color:#d1d5db;
+    color:var(--text-secondary);
     font-size:1.15rem;
     line-height:1.8;
 }
 
 .competicao-slide{
-
-    background:linear-gradient(
-    145deg,
-    #1f1f1f
-);
-
+    background:var(--dark-secondary);
     border:1px solid rgba(34,197,94,.25);
-
     border-radius:20px;
-
     padding:40px;
-
     min-height:350px;
-
     display:flex;
-
     flex-direction:column;
-
     justify-content:center;
-
     text-align:center;
-
-    transition:.3s,
-
-}
-
-.competicao-slide h3{
-
-    font-weight:700;
-
-    margin-bottom:15px;
-
 }
 
 .competicao-slide p{
-
-    color:#d1d5db;
-
-    margin-bottom:10px;
-
+    color:var(--text-secondary);
 }
 
-.carousel-control-prev,
-.carousel-control-next{
-
-    width:8%;
-
+.cards{
+    margin-top:45px;
 }
 
+.sobre{
+    margin-top:45px;
+    background:var(--dark-secondary);
+    padding:30px;
+    border-radius:15px;
+    border:1px solid var(--border-color);
+}
+
+.carousel{
+    background:transparent;
+}
+
+.topbar{
+    background: var(--dark-secondary);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:28px;
+    gap:15px;
+}
+
+.search-box{
+    flex:1;
+    display:flex;
+    align-items:center;
+    background: var(--dark-tertiary);
+    border-radius:30px;
+    padding:10px 18px;
+}
+
+.search-box i{
+    color: var(--primary-color);
+    font-size:20px;
+    margin-right:12px;
+}
+
+.search-box input{
+    width:100%;
+    border:none;
+    outline:none;
+    background:none;
+    color:white;
+    font-size:14px;
+}
+
+.search-box input::placeholder{
+    color:#666;
+}
+
+.user-btn{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-decoration:none;
+    color:var(--primary-color);
+    transition:.2s;
+    min-width:60px;
+}
+
+.user-btn:hover{
+    color:#34ce57;
+}
+
+.user-btn i{
+    font-size:34px;
+}
+
+.user-name{
+    font-size:11px;
+    color:#aaa;
+    margin-top:2px;
+    text-align:center;
+}
 
 </style>
-</head>
+{% endblock %}
+{% block content %}
 
-<body>
+<div class="topbar">
 
-<div class="sidebar">
-    <h3><i class="bi bi-code-slash"></i>ProgEventos-MG</h3>
+    <form action="{% url 'pesquisa' %}" method="GET" style="flex:1;">
 
-    <a href="{% url 'index' %}"><i class="bi bi-house-fill"></i>Início</a>
-    <a href="{% url 'competicoes' %}"><i class="bi bi-trophy-fill"></i>Competições</a>
-    <a href="{% url 'universidades' %}"><i class="bi bi-building"></i>Universidades</a>
-    <a href="{% url 'calendarios' %}"><i class="bi bi-calendar-event-fill"></i>Calendário</a>
-    <a href="{% url 'resultados' %}"><i class="bi bi-award-fill"></i>Resultados</a>
-    <a href="{% url 'favoritos' %}"><i class="bi bi-heart-fill"></i>Favoritos</a>
-    <a href="{% url 'historicos' %}"><i class="bi bi-clock-history"></i>Histórico</a>
-    <a href="{% url 'notificacoes' %}"><i class="bi bi-bell-fill"></i>Notificações</a>
-    <a href="{% url 'pesquisa' %}"><i class="bi bi-search"></i>Pesquisa</a>
-    <a href="{% url 'perfil' %}"><i class="bi bi-person-circle"></i>Perfil</a>
+        <div class="search-box">
 
-    <div class="divider"></div>
+            <i class="bi bi-search"></i>
 
-    {% if request.user.is_authenticated %}
-        <a href="{% url 'logout' %}" class="btn-sair">
-            <i class="bi bi-box-arrow-right"></i>Sair ({{ request.user.username }})
-        </a>
-    {% else %}
-        <a href="{% url 'login' %}">
-            <i class="bi bi-box-arrow-in-right"></i>Login
-        </a>
-    {% endif %}
-</div>
+            <input
+                type="text"
+                name="pesquisa"
+                placeholder="Pesquisar competições, universidades ou organizadores..."
+            >
 
-<div class="content">
+        </div>
 
-    <div class="topbar">
+    </form> 
 
-        <form action="{% url 'pesquisa' %}" method="GET" style="flex:1;">
-            <div class="search-box">
-                <i class="bi bi-search"></i>
-                <input type="text" name="pesquisa"
-                       placeholder="Pesquisar competições, universidades ou organizadores...">
-            </div>
-        </form>
-
-        <!-- CORRIGIDO: botão do perfil agora é funcional -->
-        <a href="{% url 'perfil' %}" class="user-btn" title="Meu Perfil">
-            <i class="bi bi-person-circle"></i>
-            {% if request.user.is_authenticated %}
-                <span class="user-name">{{ request.user.username }}</span>
-            {% else %}
-                <span class="user-name">Perfil</span>
-            {% endif %}
-        </a>
-
-    </div>
-
-    <!-- Carousel - Bootstrap 5: data-bs-* -->
+</div> 
+    <!-- Carousel - Bootstrap 5: data-bs-* --> 
     <section class="hero-integrada">
 
     <div class="row align-items-center">
@@ -457,7 +296,7 @@ footer {
 </div>
 </section>
 
-    <div class="cards">
+    <div class="cards"> 
         <div class="row g-3">
             <div class="col-md-3">
                 <div class="info-card">
@@ -509,17 +348,4 @@ footer {
            incentivar a participação da comunidade acadêmica e tecnológica nas competições de programação.</p>
     </div>
 
-    <footer>
-        <hr style="border-color:#2e2e2e;">
-        <p><i class="bi bi-code-slash"></i> ProgEventos-MG © 2026 &nbsp;·&nbsp; Python · Django · Bootstrap 5</p>
-    </footer>
-
-</div>
-
-<!-- Bootstrap 5.3.8 Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
-
-</body>
-</html>
+{% endblock %}

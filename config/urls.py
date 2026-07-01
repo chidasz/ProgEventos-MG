@@ -48,12 +48,23 @@ urlpatterns = [
         CalendariosView.as_view(),
         name='calendarios'
     ),
+    # Endpoint AJAX para auto-refresh do calendário
+    path(
+        'api/calendarios/',
+        CalendariosAjaxView.as_view(),
+        name='calendarios_ajax'
+    ),
 
     # Notificações
     path(
         'notificacoes/',
         NotificacoesView.as_view(),
         name='notificacoes'
+    ),
+      path(
+        'notificacao/marcar-lida/<int:notificacao_id>/',
+        MarcarNotificacaoLidaView.as_view(),
+        name='marcar_notificacao_lida'
     ),
 
     # Favoritos
@@ -90,4 +101,11 @@ urlpatterns = [
         AdministracoesView.as_view(),
         name='administracoes'
     ),
+
+    path(
+    'cadastro/',
+    CadastroView.as_view(),
+    name='cadastro'
+    ),
+
 ]

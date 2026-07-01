@@ -1,222 +1,108 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends 'base.html' %}
 
-<head>
+{% block title %}
+Cadastro
+{% endblock %}
 
-<meta charset="UTF-8">
+{% block content %}
 
-<title>Cadastro</title>
+<div class="container py-5">
 
-<link rel="stylesheet"
-href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <div class="row justify-content-center">
 
-<style>
+        <div class="col-lg-6 col-md-8">
 
-body{
-    background:#121212;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    color:white;
-    padding:30px;
-}
+            <div class="card shadow-sm border-0">
 
-.card{
-    width:500px;
-    background:#1f1f1f;
-    padding:30px;
-    border-radius:15px;
-}
+                <div class="card-header bg-success text-white text-center">
+                    <h3 class="mb-0">
+                        Criar Conta
+                    </h3>
+                </div>
 
-.form-control{
-    background:#2b2b2b;
-    color:white;
-    border:none;
-}
+                <div class="card-body p-4">
 
-.form-control:focus{
-    background:#2b2b2b;
-    color:white;
-}
+                    <form method="POST">
 
-.btn-success{
-    width:100%;
-}
+                        {% csrf_token %}
 
-.avatar-container{
-    display:flex;
-    justify-content:space-around;
-    margin-top:15px;
-    gap:15px;
-}
+                        {% if form.errors %}
 
-.avatar-option{
-    text-align:center;
-    cursor:pointer;
-}
+                            <div class="alert alert-danger">
 
-.avatar-option input{
-    display:none;
-}
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                {% endfor %}
 
-.avatar-option img{
-    width:80px;
-    height:80px;
-    border-radius:50%;
-    border:3px solid transparent;
-    transition:.3s;
-}
+                                {% for error in form.non_field_errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
 
-.avatar-option input:checked + img{
-    border:3px solid #28a745;
-    transform:scale(1.05);
-}
+                            </div>
 
-.avatar-option span{
-    display:block;
-    margin-top:8px;
-}
+                        {% endif %}
 
-</style>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Nome de usuário
+                            </label>
 
-</head>
+                            {{ form.username }}
+                        </div>
 
-<body>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                E-mail
+                            </label>
 
-<div class="card">
+                            {{ form.email }}
+                        </div>
 
-<h2 class="text-center mb-4">
-Criar Conta
-</h2>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Senha
+                            </label>
 
-<form method="POST" enctype="multipart/form-data">
+                            {{ form.password1 }}
+                        </div>
 
-{% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Confirmar senha
+                            </label>
 
-<label>Nome de usuário</label>
+                            {{ form.password2 }}
+                        </div>
 
-<input
-type="text"
-name="username"
-class="form-control"
-required>
+                        <button type="submit"
+                                class="btn btn-success w-100">
+                            Cadastrar
+                        </button>
 
-<br>
+                    </form>
 
-<label>Email</label>
+                    <hr>
 
-<input
-type="email"
-name="email"
-class="form-control"
-required>
+                    <div class="text-center">
 
-<br>
+                        Já possui conta?
 
-<label>Senha</label>
+                        <a href="{% url 'login' %}">
+                            Entrar
+                        </a>
 
-<input
-type="password"
-name="senha"
-class="form-control"
-required>
+                    </div>
 
-<br>
+                </div>
 
-<label>Universidade</label>
+            </div>
 
-<input
-type="text"
-name="universidade"
-class="form-control"
-placeholder="Ex.: UFLA">
+        </div>
 
-<br>
-
-<label>Escolha um avatar</label>
-
-<div class="avatar-container">
-
-<label class="avatar-option">
-
-<input
-type="radio"
-name="avatar"
-value="homem"
-checked>
-
-<img
-src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
-
-<span>Homem</span>
-
-</label>
-
-<label class="avatar-option">
-
-<input
-type="radio"
-name="avatar"
-value="mulher">
-
-<img
-src="https://cdn-icons-png.flaticon.com/512/4140/4140051.png">
-
-<span>Mulher</span>
-
-</label>
-
-<label class="avatar-option">
-
-<input
-type="radio"
-name="avatar"
-value="neutro">
-
-<img
-src="https://cdn-icons-png.flaticon.com/512/847/847969.png">
-
-<span>Neutro</span>
-
-</label>
+    </div>
 
 </div>
 
-<br>
-
-<label>Ou envie uma foto personalizada</label>
-
-<input
-type="file"
-name="foto"
-class="form-control"
-accept="image/*">
-
-<br>
-
-<button
-type="submit"
-class="btn btn-success">
-
-Criar Conta
-
-</button>
-
-</form>
-
-<div class="text-center mt-3">
-
-<a href="{% url 'login' %}">
-
-Já possui conta? Entrar
-
-</a>
-
-</div>
-
-</div>
-
-</body>
-
-</html>
+{% endblock %}

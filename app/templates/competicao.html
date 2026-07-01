@@ -44,7 +44,7 @@
                     <th>
                         <i class="bi bi-building"></i> Universidade
                     </th>
-                    <th style="width: 120px;">Ações</th>
+                    <th style="width: 150px;">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,6 +68,23 @@
                     </td>
                     <td>
                         <div class="d-flex gap-2">
+                            <!-- Botão Favoritar -->
+                            {% if user.is_authenticated %}
+                            <button type="button"
+                                    class="btn btn-sm favorito-btn {% if competicao.is_favorito %}btn-danger{% else %}btn-outline-danger{% endif %}"
+                                    data-competicao-id="{{ competicao.id }}"
+                                    title="{% if competicao.is_favorito %}Remover dos favoritos{% else %}Adicionar aos favoritos{% endif %}">
+                                <i class="bi bi-heart-fill"></i>
+                            </button>
+                            {% else %}
+                            <button type="button"
+                                    class="btn btn-outline-danger btn-sm"
+                                    title="Faça login para favoritar"
+                                    disabled>
+                                <i class="bi bi-heart"></i>
+                            </button>
+                            {% endif %}
+
                             <a href="{% url 'editar_competicao' competicao.id %}"
                                class="btn btn-editar btn-sm"
                                title="Editar">
@@ -104,7 +121,7 @@
         {% for competicao in competicoes %}
         <div class="col-md-6 col-lg-4">
             <div class="data-card h-100">
-                <div class="data-card-header">
+                <div class="data-card-header" style="position: relative;">
                     <div>
                         <div class="data-card-title">
                             <i class="bi bi-trophy-fill" style="color: #28a745; margin-right: 8px;"></i>
@@ -114,6 +131,16 @@
                             {{ competicao.descricao|truncatewords:8 }}
                         </div>
                     </div>
+                    <!-- Botão Favoritar em Cards -->
+                    {% if user.is_authenticated %}
+                    <button type="button"
+                            class="btn btn-sm favorito-btn-card {% if competicao.is_favorito %}btn-danger{% else %}btn-outline-danger{% endif %}"
+                            data-competicao-id="{{ competicao.id }}"
+                            style="position: absolute; top: 10px; right: 10px;"
+                            title="{% if competicao.is_favorito %}Remover dos favoritos{% else %}Adicionar aos favoritos{% endif %}">
+                        <i class="bi bi-heart-fill"></i>
+                    </button>
+                    {% endif %}
                 </div>
 
                 <hr style="border-color: #2e2e2e; margin: 12px 0;">
@@ -197,6 +224,16 @@
     </div>
 </div>
 
+<!-- Toast de notificação -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="favoritoToast" class="toast" role="alert">
+        <div class="toast-body" style="background-color: #1f1f1f; color: white; border: 1px solid #2e2e2e;">
+            <i class="bi bi-heart-fill" style="color: #28a745; margin-right: 8px;"></i>
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_scripts %}
@@ -224,5 +261,62 @@ document.getElementById('modalExcluir').addEventListener('show.bs.modal', functi
     document.getElementById('nomeCompeticao').textContent = '"' + nome + '"';
     document.getElementById('formExcluir').setAttribute('action', '/competicao/delete/' + id + '/');
 });
+
+// =====================================
+// FAVORITO - SISTEMA AJAX
+// =====================================
+
+// Seleciona todos os botões de favorito
+const favoritoBtns = document.querySelectorAll('.favorito-btn, .favorito-btn-card');
+
+favoritoBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        const competicaoId = this.getAttribute('data-competicao-id');
+        toggleFavorito(competicaoId, this);
+    });
+});
+
+function toggleFavorito(competicaoId, btn) {
+    // Pega o CSRF token
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                      document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
+
+    fetch(`/favorito/toggle/${competicaoId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Atualiza o botão
+        if (data.status === 'adicionado') {
+            btn.classList.remove('btn-outline-danger');
+            btn.classList.add('btn-danger');
+            btn.title = 'Remover dos favoritos';
+            showNotificacao('💚 ' + data.message);
+        } else if (data.status === 'removido') {
+            btn.classList.remove('btn-danger');
+            btn.classList.add('btn-outline-danger');
+            btn.title = 'Adicionar aos favoritos';
+            showNotificacao('😢 ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        showNotificacao('⚠️ Erro ao atualizar favorito');
+    });
+}
+
+// Exibe notificação em toast
+function showNotificacao(message) {
+    const toastElement = document.getElementById('favoritoToast');
+    document.getElementById('toastMessage').textContent = message;
+    
+    const toast = new bootstrap.Toast(toastElement);
+    toast.show();
+}
 </script>
 {% endblock %}

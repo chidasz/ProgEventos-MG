@@ -4,85 +4,151 @@
 
 {% block content %}
 
+<style>
+    .notif-card               { position:relative; background:#1f1f1f; border:1px solid #2e2e2e; border-radius:12px; padding:20px; height:100%; }
+    .notif-card.borda-verde   { border-left:4px solid #28a745; }
+    .notif-card.borda-amarelo { border-left:4px solid #ffc107; }
+    .notif-card.borda-laranja { border-left:4px solid #ff6b6b; }
+    .notif-card.borda-vermelho{ border-left:4px solid #ff4444; }
+    .notif-card.borda-cinza   { border-left:4px solid #666; opacity:0.75; }
+</style>
+
 <div class="page-header">
     <h2>
         <i class="bi bi-bell-fill"></i>
         Notificações
     </h2>
-    <p>Fique atualizado com as novidades da plataforma</p>
+    <p>Acompanhe todas as notificações sobre competições favoritas</p>
 </div>
 
 {% if notificacoes %}
 
-<div style="max-width: 600px; margin: 0 auto;">
-    {% for notificacao in notificacoes %}
-    <div class="data-card" style="border-left: 4px solid #28a745; margin-bottom: 16px;">
-        <div style="display: flex; gap: 16px; align-items: flex-start;">
-            
-            <!-- Icon -->
-            <div style="background: rgba(40, 167, 69, 0.15); 
-                       border-radius: 10px; padding: 12px; 
-                       min-width: 44px; text-align: center; color: #28a745; font-size: 20px;">
-                <i class="bi bi-bell-fill"></i>
+<div class="row g-3">
+    {% for notif in notificacoes %}
+
+    <div class="col-md-6 col-lg-4">
+
+        <div class="notif-card
+            {% if notif.status == 'lida' %}borda-cinza
+            {% elif notif.tipo == 'favorito_adicionado' %}borda-verde
+            {% elif notif.tipo == '1_mes' %}borda-amarelo
+            {% elif notif.tipo == '15_dias' %}borda-laranja
+            {% elif notif.tipo == '1_semana' %}borda-vermelho
+            {% else %}borda-verde
+            {% endif %}">
+
+            <!-- Badge de Status -->
+            <div style="position:absolute; top:12px; right:12px;">
+                {% if notif.status == 'lida' %}
+                    <span class="badge" style="background:#555; color:#fff;">
+                        <i class="bi bi-check-circle"></i> Lida
+                    </span>
+                {% elif notif.status == 'enviada' %}
+                    <span class="badge" style="background:#28a745; color:#fff;">
+                        <i class="bi bi-info-circle"></i> Novo
+                    </span>
+                {% else %}
+                    <span class="badge" style="background:#ffc107; color:#000;">
+                        <i class="bi bi-clock"></i> Pendente
+                    </span>
+                {% endif %}
             </div>
 
-            <!-- Content -->
-            <div style="flex: 1;">
-                <h4 style="margin: 0 0 8px; color: white; font-weight: 700;">
-                    Notificação
-                </h4>
-                <p style="margin: 0 0 12px; color: #ccc; font-size: 14px;">
-                    {{ notificacao.mensagem }}
-                </p>
-                <div style="display: flex; align-items: center; gap: 8px; 
-                           color: #888; font-size: 12px;">
-                    <i class="bi bi-calendar-event"></i>
-                    <span>
-                        {% load humanize %}
-                        {{ notificacao.dataEnvio|date:"d/m/Y à\s H:i" }}
-                    </span>
+            <!-- Ícone + Mensagem -->
+            <div style="display:flex; align-items:flex-start; gap:12px; padding-right:70px;">
+                <div style="font-size:26px; margin-top:2px;">
+                    {% if notif.tipo == 'favorito_adicionado' %}💚
+                    {% elif notif.tipo == '1_mes' %}📅
+                    {% elif notif.tipo == '15_dias' %}⏰
+                    {% elif notif.tipo == '1_semana' %}⏳
+                    {% elif notif.tipo == 'hoje' %}🎉
+                    {% else %}🔔
+                    {% endif %}
+                </div>
+                <div style="flex:1;">
+                    <div style="color:white; font-weight:600; font-size:14px; margin-bottom:4px;">
+                        {{ notif.mensagem }}
+                    </div>
+                    {% if notif.competicao %}
+                    <div style="color:#aaa; font-size:12px;">
+                        <strong style="color:#ddd;">{{ notif.competicao.nome }}</strong><br>
+                        <i class="bi bi-calendar-event"></i>
+                        {{ notif.competicao.data|date:"d/m/Y" }}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 
-            <!-- Action Button -->
-            <button type="button" 
-                   class="btn btn-sm" 
-                   style="background: rgba(220, 53, 69, 0.2); color: #ff6b6b; 
-                          border: none; border-radius: 6px; padding: 6px 10px;">
-                <i class="bi bi-x-circle"></i>
-            </button>
+            <hr style="border-color:#2e2e2e; margin:14px 0;">
+
+            <!-- Informações da Competição -->
+            {% if notif.competicao %}
+            <div style="margin-bottom:14px; font-size:13px; color:#ccc;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <i class="bi bi-geo-alt-fill" style="color:#28a745;"></i>
+                    {{ notif.competicao.local }}
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <i class="bi bi-person-fill" style="color:#28a745;"></i>
+                    {{ notif.competicao.organizador }}
+                </div>
+                {% if notif.competicao.universidade %}
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <i class="bi bi-building" style="color:#28a745;"></i>
+                    {{ notif.competicao.universidade.nome }}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Tempo desde envio -->
+            <div style="background:rgba(40,167,69,0.07); border-radius:8px; padding:9px 12px;
+                        margin-bottom:14px; border-left:3px solid #28a745;">
+                <small style="color:#999; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <i class="bi bi-clock"></i>
+                    {{ notif.dataEnvio|timesince }} atrás
+                    {% if notif.lida_em %}
+                    &nbsp;·&nbsp;
+                    <i class="bi bi-check-circle" style="color:#28a745;"></i>
+                    Lida em {{ notif.lida_em|date:"d/m/Y H:i" }}
+                    {% endif %}
+                </small>
+            </div>
+
+            <!-- Botões -->
+            <div class="d-flex gap-2">
+                {% if notif.status != 'lida' %}
+                <button type="button"
+                        class="btn btn-success btn-sm w-100 btn-marcar-lida"
+                        data-notif-id="{{ notif.id }}">
+                    <i class="bi bi-check-circle"></i> Marcar como Lida
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-secondary btn-sm w-100" disabled>
+                    <i class="bi bi-check-circle"></i>
+                    {% if notif.lida_em %}Lida em {{ notif.lida_em|date:"d/m/Y" }}{% else %}Lida{% endif %}
+                </button>
+                {% endif %}
+
+                {% if notif.competicao %}
+                <a href="{% url 'competicoes' %}" class="btn btn-outline-success btn-sm w-100">
+                    <i class="bi bi-arrow-right"></i> Ver Competição
+                </a>
+                {% endif %}
+            </div>
+
         </div>
     </div>
     {% endfor %}
-</div>
-
-<!-- Stats -->
-<div style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
-    <div class="row g-3">
-        <div class="col-6">
-            <div class="info-card">
-                <i class="bi bi-bell-fill"></i>
-                <h3 style="color: #28a745;">{{ notificacoes|length }}</h3>
-                <p style="margin-bottom: 0; font-size: 12px;">Notificações</p>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="info-card">
-                <i class="bi bi-check-circle-fill"></i>
-                <h3 style="color: #28a745;">0</h3>
-                <p style="margin-bottom: 0; font-size: 12px;">Não lidas</p>
-            </div>
-        </div>
-    </div>
 </div>
 
 {% else %}
 
 <div class="empty-state">
     <i class="bi bi-bell"></i>
-    <h3>Você está em dia</h3>
-    <p style="color: #666; margin-bottom: 20px;">
-        Nenhuma notificação por enquanto. Você será notificado quando houver novidades importantes
+    <h3>Você não tem notificações</h3>
+    <p style="color:#666; margin-bottom:20px;">
+        Favoritize uma competição para receber notificações automáticas
     </p>
     <a href="{% url 'competicoes' %}" class="btn btn-success">
         <i class="bi bi-trophy-fill"></i> Explorar Competições
@@ -91,59 +157,64 @@
 
 {% endif %}
 
-<!-- Notification Settings -->
-<div style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
-    <div class="card-container">
-        <h3 style="margin-top: 0; color: white; font-weight: 700;">
-            <i class="bi bi-gear-fill"></i> Preferências de Notificação
-        </h3>
-        <hr style="border-color: #2e2e2e;">
-        
-        <div class="form-check" style="margin-bottom: 16px;">
-            <input class="form-check-input" type="checkbox" id="notif-competicoes" checked>
-            <label class="form-check-label" for="notif-competicoes">
-                <strong>Novas competições</strong>
-                <p style="margin: 4px 0 0 26px; color: #888; font-size: 13px;">
-                    Receber notificação quando uma nova competição for cadastrada
-                </p>
-            </label>
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="notificacaoToast" class="toast" role="alert" aria-live="assertive">
+        <div class="toast-body"
+             style="background:#1f1f1f; color:white; border:1px solid #2e2e2e; border-radius:8px;">
+            <i class="bi bi-check-circle" style="color:#28a745; margin-right:6px;"></i>
+            <span id="toastMessage">Notificação marcada como lida</span>
         </div>
-
-        <div class="form-check" style="margin-bottom: 16px;">
-            <input class="form-check-input" type="checkbox" id="notif-resultados" checked>
-            <label class="form-check-label" for="notif-resultados">
-                <strong>Resultados publicados</strong>
-                <p style="margin: 4px 0 0 26px; color: #888; font-size: 13px;">
-                    Receber notificação quando os resultados de competições forem disponibilizados
-                </p>
-            </label>
-        </div>
-
-        <div class="form-check" style="margin-bottom: 16px;">
-            <input class="form-check-input" type="checkbox" id="notif-favoritos" checked>
-            <label class="form-check-label" for="notif-favoritos">
-                <strong>Favoritos próximos</strong>
-                <p style="margin: 4px 0 0 26px; color: #888; font-size: 13px;">
-                    Receber lembrete dos eventos favoritos que estão se aproximando
-                </p>
-            </label>
-        </div>
-
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="notif-updates" checked>
-            <label class="form-check-label" for="notif-updates">
-                <strong>Atualizações da plataforma</strong>
-                <p style="margin: 4px 0 0 26px; color: #888; font-size: 13px;">
-                    Receber informações sobre novas funcionalidades e melhorias
-                </p>
-            </label>
-        </div>
-
-        <hr style="border-color: #2e2e2e; margin-top: 20px;">
-        <button type="button" class="btn btn-success" style="width: 100%;">
-            <i class="bi bi-check-circle"></i> Salvar Preferências
-        </button>
     </div>
 </div>
 
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function getCsrf() {
+        var cookies = document.cookie.split('; ');
+        for (var i = 0; i < cookies.length; i++) {
+            if (cookies[i].startsWith('csrftoken=')) {
+                return cookies[i].split('=')[1];
+            }
+        }
+        var input = document.querySelector('[name=csrfmiddlewaretoken]');
+        return input ? input.value : '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var botoes = document.querySelectorAll('.btn-marcar-lida');
+        botoes.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var notifId = this.getAttribute('data-notif-id');
+                fetch('/notificacao/marcar-lida/' + notifId + '/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrf()
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data.status === 'lida') {
+                        mostrarToast('Notificação marcada como lida!');
+                        setTimeout(function () { location.reload(); }, 1000);
+                    }
+                })
+                .catch(function (err) {
+                    console.error(err);
+                    mostrarToast('Erro ao marcar notificação.');
+                });
+            });
+        });
+    });
+
+    function mostrarToast(mensagem) {
+        var el = document.getElementById('notificacaoToast');
+        document.getElementById('toastMessage').textContent = mensagem;
+        new bootstrap.Toast(el).show();
+    }
+</script>
 {% endblock %}

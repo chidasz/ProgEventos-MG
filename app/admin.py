@@ -47,10 +47,10 @@ class UniversidadeAdmin(admin.ModelAdmin):
 
 @admin.register(Competicao)
 class CompeticaoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome', 'data', 'universidade', 'organizador')
-    list_filter = ('data', 'universidade', 'organizador')
+    list_display = ('id', 'nome', 'data', 'universidade', 'organizador', 'get_total_favoritos')
+    list_filter = ('data', 'universidade', 'organizador', 'criado_em')
     search_fields = ('nome', 'descricao', 'organizador')
-    readonly_fields = ('id',)
+    readonly_fields = ('id', 'criado_em', 'get_total_favoritos')
     fieldsets = (
         ('Informações Básicas', {
             'fields': ('nome', 'descricao', 'data')
@@ -61,18 +61,28 @@ class CompeticaoAdmin(admin.ModelAdmin):
         ('Gestão', {
             'fields': ('organizador', 'pessoa', 'administrador')
         }),
+        ('Auditoria', {
+            'fields': ('criado_em',),
+            'classes': ('collapse',)
+        }),
     )
     date_hierarchy = 'data'
+    
+    def get_total_favoritos(self, obj):
+        """Mostra quantos usuários favoritaram"""
+        total = Favorito.objects.filter(competicao=obj).count()
+        return f"❤️ {total} favorito(s)"
+    get_total_favoritos.short_description = "Favoritos"
 
 
 # =========================
-# RESULTADO (CORRIGIDO - Sem campo colocacao)
+# RESULTADO
 # =========================
 
 @admin.register(Resultado)
 class ResultadoAdmin(admin.ModelAdmin):
     list_display = ('id', 'equipe', 'get_colocacao', 'pontuacao', 'competicao')
-    list_filter = ('competicao', 'pontuacao')
+    list_filter = ('competicao', 'pontuacao', 'criado_em')
     search_fields = ('equipe', 'competicao__nome')
     readonly_fields = ('id', 'get_colocacao', 'criado_em', 'atualizado_em')
     fieldsets = (
@@ -91,13 +101,7 @@ class ResultadoAdmin(admin.ModelAdmin):
     def get_colocacao(self, obj):
         """Exibe a colocação calculada dinamicamente"""
         return f"{obj.colocacao}º lugar"
-    get_colocacao.short_description = "Colocação"
-    
-    def get_readonly_fields(self, request, obj=None):
-        """Deixa pontuacao editável apenas na criação"""
-        if obj:
-            return self.readonly_fields + ('pontuacao',)
-        return self.readonly_fields
+    get_colocacao.short_description = "Colocação (Calculada)"
 
 
 # =========================
@@ -122,16 +126,49 @@ class CalendarioAdmin(admin.ModelAdmin):
 
 
 # =========================
-# NOTIFICAÇÃO
+# NOTIFICAÇÃO (MELHORADO)
 # =========================
 
 @admin.register(Notificacao)
 class NotificacaoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'mensagem', 'dataEnvio', 'pessoa')
-    list_filter = ('dataEnvio',)
-    search_fields = ('mensagem', 'pessoa__user__username')
-    readonly_fields = ('id', 'dataEnvio')
+    list_display = ('id', 'get_icon', 'mensagem', 'usuario', 'tipo', 'status', 'dataEnvio')
+    list_filter = ('tipo', 'status', 'dataEnvio', 'data_agendada')
+    search_fields = ('mensagem', 'usuario__username', 'competicao__nome')
+    readonly_fields = ('id', 'dataEnvio', 'get_icon')
+    fieldsets = (
+        ('Notificação', {
+            'fields': ('mensagem', 'tipo', 'get_icon')
+        }),
+        ('Destinatário', {
+            'fields': ('usuario', 'competicao')
+        }),
+        ('Status', {
+            'fields': ('status', 'lida_em')
+        }),
+        ('Agendamento', {
+            'fields': ('data_agendada', 'dataEnvio'),
+            'classes': ('collapse',)
+        }),
+    )
     date_hierarchy = 'dataEnvio'
+    
+    def get_icon(self, obj):
+        """Mostra ícone do tipo de notificação"""
+        icons = {
+            'favorito_adicionado': '💚 Favorito',
+            '1_mes': '📅 1 Mês',
+            '15_dias': '⏰ 15 Dias',
+            '1_semana': '⏳ 1 Semana',
+            'hoje': '🎉 Hoje'
+        }
+        return icons.get(obj.tipo, obj.tipo)
+    get_icon.short_description = "Tipo"
+    
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            # Quando editando, deixa alguns campos readonly
+            return self.readonly_fields + ('dataEnvio',)
+        return self.readonly_fields
 
 
 # =========================
@@ -155,25 +192,49 @@ class PerfilAdmin(admin.ModelAdmin):
 
 
 # =========================
-# FAVORITO
+# FAVORITO (COM NOTIFICAÇÕES)
 # =========================
 
 @admin.register(Favorito)
 class FavoritoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'competicao', 'criado_em')
-    list_filter = ('criado_em', 'user')
+    list_display = ('id', 'user', 'competicao', 'get_dias_restantes', 'criado_em')
+    list_filter = ('criado_em', 'user', 'competicao__data')
     search_fields = ('user__username', 'competicao__nome')
-    readonly_fields = ('id', 'criado_em')
+    readonly_fields = ('id', 'criado_em', 'get_dias_restantes', 'get_notificacoes')
     date_hierarchy = 'criado_em'
     fieldsets = (
         ('Favorito', {
             'fields': ('user', 'competicao')
+        }),
+        ('Detalhes', {
+            'fields': ('get_dias_restantes', 'get_notificacoes')
         }),
         ('Auditoria', {
             'fields': ('criado_em',),
             'classes': ('collapse',)
         }),
     )
+    
+    def get_dias_restantes(self, obj):
+        """Mostra quantos dias faltam para a competição"""
+        from datetime import date
+        dias = (obj.competicao.data - date.today()).days
+        if dias > 0:
+            return f"⏳ Faltam {dias} dias"
+        elif dias == 0:
+            return "🎉 É HOJE!"
+        else:
+            return f"✅ Passou há {abs(dias)} dias"
+    get_dias_restantes.short_description = "Status"
+    
+    def get_notificacoes(self, obj):
+        """Mostra notificações associadas"""
+        notifs = Notificacao.objects.filter(
+            usuario=obj.user,
+            competicao=obj.competicao
+        ).count()
+        return f"🔔 {notifs} notificação(ões)"
+    get_notificacoes.short_description = "Notificações"
 
 
 # =========================
@@ -182,27 +243,19 @@ class FavoritoAdmin(admin.ModelAdmin):
 
 @admin.register(Historico)
 class HistoricoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'equipe', 'data', 'get_posicao', 'pessoa')
-    list_filter = ('data',)
+    list_display = ('id', 'equipe', 'data', 'pessoa', 'resultado')
+    list_filter = ('data', 'pessoa')
     search_fields = ('equipe', 'pessoa__user__username')
     readonly_fields = ('id',)
-
+    date_hierarchy = 'data'
     fieldsets = (
         ('Informações', {
-            'fields': ('equipe', 'data')
+            'fields': ('equipe', 'data', 'resultado')
         }),
         ('Pessoa', {
             'fields': ('pessoa',)
         }),
-        ('Resultado', {
-            'fields': ('resultado',)
-        }),
     )
-
-    def get_posicao(self, obj):
-        return obj.resultado.colocacao if obj.resultado else None
-
-    get_posicao.short_description = 'Posição'
 
 
 # =========================
@@ -226,6 +279,6 @@ class PesquisaAdmin(admin.ModelAdmin):
 # CONFIGURAÇÕES GLOBAIS DO ADMIN
 # =========================
 
-admin.site.site_header = "ProgEventos-MG - Administração"
+admin.site.site_header = "ProgEventos-MG - Administração v3.0"
 admin.site.site_title = "ProgEventos-MG Admin"
-admin.site.index_title = "Bem-vindo ao painel administrativo"
+admin.site.index_title = "Painel Administrativo - Favoritos e Notificações"

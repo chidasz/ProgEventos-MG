@@ -464,70 +464,6 @@
                                required>
                     </div>
 
-                    <!-- Checkbox Admin -->
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               type="checkbox"
-                               id="admin"
-                               name="admin">
-                        <label class="form-check-label" for="admin">
-                            Sou administrador
-                        </label>
-                    </div>
-
-                    <!-- Avatar Selection -->
-                    <label class="avatar-label">
-                        <i class="bi bi-image"></i>
-                        Escolha seu avatar
-                    </label>
-
-                    <div class="avatar-container">
-                        <label class="avatar-option">
-                            <input type="radio"
-                                   name="avatar"
-                                   value="homem"
-                                   checked>
-                            <div class="avatar-option-wrapper">
-                                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
-                                     alt="Avatar Homem">
-                            </div>
-                            <span>Homem</span>
-                        </label>
-
-                        <label class="avatar-option">
-                            <input type="radio"
-                                   name="avatar"
-                                   value="mulher">
-                            <div class="avatar-option-wrapper">
-                                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140051.png"
-                                     alt="Avatar Mulher">
-                            </div>
-                            <span>Mulher</span>
-                        </label>
-
-                        <label class="avatar-option">
-                            <input type="radio"
-                                   name="avatar"
-                                   value="neutro">
-                            <div class="avatar-option-wrapper">
-                                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                                     alt="Avatar Neutro">
-                            </div>
-                            <span>Neutro</span>
-                        </label>
-                    </div>
-
-                    <!-- File Upload -->
-                    <div class="file-input-wrapper">
-                        <label class="file-input-label">
-                            <i class="bi bi-cloud-upload"></i>
-                            Ou envie uma foto personalizada
-                            <input type="file"
-                                   name="foto"
-                                   accept="image/*">
-                        </label>
-                    </div>
-
                     <!-- Botão Login -->
                     <button type="submit" class="btn btn-login">
                         <i class="bi bi-box-arrow-in-right"></i>
@@ -549,13 +485,20 @@
 
                 </form>
 
-                <!-- Back Link -->
-                <div class="back-link">
-                    <a href="/">
-                        <i class="bi bi-arrow-left"></i>
-                        Voltar para página inicial
-                    </a>
-                </div>
+               <div class="text-center mt-3">
+
+    <span style="color:#aaa;">
+        Não possui uma conta?
+    </span>
+
+    <br>
+
+    <a href="{% url 'cadastro' %}"
+       class="btn btn-outline-success mt-2">
+        Criar Conta
+    </a>
+
+</div>
 
             </div>
 

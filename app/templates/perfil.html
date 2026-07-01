@@ -70,7 +70,7 @@
         <div class="col-md-3 col-sm-6">
             <div class="info-card">
                 <i class="bi bi-heart-fill"></i>
-                <h3 style="color: #28a745;">0</h3>
+                <h3 style="color: #28a745;">{{ total_favoritos }}</h3>
                 <p style="margin-bottom: 0;">Favoritos</p>
             </div>
         </div>
@@ -86,86 +86,19 @@
         <div class="col-md-3 col-sm-6">
             <div class="info-card">
                 <i class="bi bi-bell-fill"></i>
-                <h3 style="color: #28a745;">0</h3>
+                <h3 style="color: #28a745;">{{ total_notificacoes }}</h3>
                 <p style="margin-bottom: 0;">Notificações</p>
             </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
             <div class="info-card">
-                <i class="bi bi-award-fill"></i>
-                <h3 style="color: #28a745;">0</h3>
-                <p style="margin-bottom: 0;">Conquistas</p>
+                <i class="bi bi-envelope-exclamation-fill"></i>
+                <h3 style="color: {% if notif_nao_lidas > 0 %}#ffc107{% else %}#28a745{% endif %};">
+                    {{ notif_nao_lidas }}
+                </h3>
+                <p style="margin-bottom: 0;">Não lidas</p>
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- Menu Rápido -->
-<div style="margin-top: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
-    <h3 style="color: white; font-size: 18px; font-weight: 700; margin-bottom: 20px;">
-        <i class="bi bi-lightning-fill"></i> Atalhos Rápidos
-    </h3>
-
-    <div class="row g-3">
-        <div class="col-md-6">
-            <a href="{% url 'favoritos' %}" class="data-card h-100" style="text-decoration: none; display: flex; align-items: center; gap: 16px;">
-                <div style="background: rgba(40, 167, 69, 0.2); border-radius: 10px; 
-                           padding: 16px; color: #28a745; font-size: 24px;">
-                    <i class="bi bi-heart-fill"></i>
-                </div>
-                <div>
-                    <h4 style="margin: 0; color: white; font-weight: 700;">Favoritos</h4>
-                    <p style="margin: 4px 0 0; color: #888; font-size: 13px;">
-                        Veja suas competições favoritas
-                    </p>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-md-6">
-            <a href="{% url 'historicos' %}" class="data-card h-100" style="text-decoration: none; display: flex; align-items: center; gap: 16px;">
-                <div style="background: rgba(40, 167, 69, 0.2); border-radius: 10px; 
-                           padding: 16px; color: #28a745; font-size: 24px;">
-                    <i class="bi bi-clock-history"></i>
-                </div>
-                <div>
-                    <h4 style="margin: 0; color: white; font-weight: 700;">Histórico</h4>
-                    <p style="margin: 4px 0 0; color: #888; font-size: 13px;">
-                        Veja seu histórico de participações
-                    </p>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-md-6">
-            <a href="{% url 'notificacoes' %}" class="data-card h-100" style="text-decoration: none; display: flex; align-items: center; gap: 16px;">
-                <div style="background: rgba(40, 167, 69, 0.2); border-radius: 10px; 
-                           padding: 16px; color: #28a745; font-size: 24px;">
-                    <i class="bi bi-bell-fill"></i>
-                </div>
-                <div>
-                    <h4 style="margin: 0; color: white; font-weight: 700;">Notificações</h4>
-                    <p style="margin: 4px 0 0; color: #888; font-size: 13px;">
-                        Gerencie suas notificações
-                    </p>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-md-6">
-            <a href="{% url 'competicoes' %}" class="data-card h-100" style="text-decoration: none; display: flex; align-items: center; gap: 16px;">
-                <div style="background: rgba(40, 167, 69, 0.2); border-radius: 10px; 
-                           padding: 16px; color: #28a745; font-size: 24px;">
-                    <i class="bi bi-trophy-fill"></i>
-                </div>
-                <div>
-                    <h4 style="margin: 0; color: white; font-weight: 700;">Competições</h4>
-                    <p style="margin: 4px 0 0; color: #888; font-size: 13px;">
-                        Explore todas as competições
-                    </p>
-                </div>
-            </a>
         </div>
     </div>
 </div>

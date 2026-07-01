@@ -43,6 +43,15 @@ body {
 }
 
 /* ==================== SIDEBAR ==================== */
+.usuario-logado{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 16px;
+    color:#fff;
+    font-weight:500;
+}
+
 .sidebar {
     position: fixed;
     left: 0;
@@ -125,7 +134,7 @@ body {
 }
 
 /* ==================== CONTENT ==================== */
-.content {
+.content{
     margin-left: 265px;
     padding: 30px;
     min-height: 100vh;
@@ -269,6 +278,27 @@ body {
 .table {
     color: white;
     border-color: var(--border-color);
+}
+.table {
+    --bs-table-bg: var(--dark-tertiary);
+    --bs-table-color: white;
+    --bs-table-border-color: var(--border-color);
+    background-color: var(--dark-tertiary);
+    border-radius: 5px;
+}
+.table tbody td,
+.table tbody th {
+    background-color: var(--dark-tertiary);
+    color: white;
+}   
+
+.table thead th {
+    background: linear-gradient(
+        90deg,
+        var(--primary-color) 0%,
+        #22a844 100%
+    );
+    color: white;
 }
 
 .table thead {
@@ -593,30 +623,62 @@ footer {
 <body>
 
 <div class="sidebar">
-    <h3><i class="bi bi-code-slash"></i>Prog</h3>
+    <h3><i class="bi bi-code-slash"></i>ProgEventos-MG</h3>
 
     <a href="{% url 'index' %}"><i class="bi bi-house-fill"></i><span>Início</span></a>
     <a href="{% url 'competicoes' %}"><i class="bi bi-trophy-fill"></i><span>Competições</span></a>
     <a href="{% url 'universidades' %}"><i class="bi bi-building"></i><span>Universidades</span></a>
     <a href="{% url 'calendarios' %}"><i class="bi bi-calendar-event-fill"></i><span>Calendário</span></a>
     <a href="{% url 'resultados' %}"><i class="bi bi-award-fill"></i><span>Resultados</span></a>
-    <a href="{% url 'favoritos' %}"><i class="bi bi-heart-fill"></i><span>Favoritos</span></a>
     <a href="{% url 'historicos' %}"><i class="bi bi-clock-history"></i><span>Histórico</span></a>
     <a href="{% url 'notificacoes' %}"><i class="bi bi-bell-fill"></i><span>Notificações</span></a>
-    <a href="{% url 'pesquisa' %}"><i class="bi bi-search"></i><span>Pesquisa</span></a>
-    <a href="{% url 'perfil' %}"><i class="bi bi-person-circle"></i><span>Perfil</span></a>
 
     <div class="divider"></div>
 
-    {% if request.user.is_authenticated %}
-        <a href="{% url 'logout' %}" class="btn-sair">
-            <i class="bi bi-box-arrow-right"></i><span>Sair</span>
-        </a>
-    {% else %}
-        <a href="{% url 'login' %}">
-            <i class="bi bi-box-arrow-in-right"></i><span>Login</span>
-        </a>
-    {% endif %}
+{% if user.is_authenticated %}
+
+    <!-- CARD DO USUÁRIO LOGADO -->
+    <a href="{% url 'perfil' %}" class="usuario-logado"
+       style="background:rgba(40,167,69,0.12); border:1px solid rgba(40,167,69,0.3);
+              border-radius:10px; margin-bottom:8px; text-decoration:none;
+              transition:all 0.2s ease; display:flex; align-items:center; gap:10px; padding:12px 14px;">
+
+        <!-- Avatar circular com inicial do usuário -->
+        <div style="width:36px; height:36px; border-radius:50%;
+                    background:linear-gradient(135deg,#28a745,#22a844);
+                    display:flex; align-items:center; justify-content:center;
+                    font-size:16px; font-weight:700; color:white; flex-shrink:0;
+                    border:2px solid rgba(255,255,255,0.2);">
+            {{ user.username|first|upper }}
+        </div>
+
+        <!-- Nome e label -->
+        <div style="flex:1; overflow:hidden;">
+            <div style="color:white; font-weight:600; font-size:13px;
+                        white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                {{ user.get_full_name|default:user.username }}
+            </div>
+            <div style="color:#28a745; font-size:11px; font-weight:500;">
+                Ver perfil →
+            </div>
+        </div>
+    </a>
+
+
+{% else %}
+
+    <a href="{% url 'login' %}">
+        <i class="bi bi-box-arrow-in-right"></i>
+        <span>Entrar</span>
+    </a>
+
+    <a href="{% url 'cadastro' %}">
+        <i class="bi bi-person-plus"></i>
+        <span>Cadastre-se</span>
+    </a>
+
+{% endif %}
+
 </div>
 
 <div class="content">
